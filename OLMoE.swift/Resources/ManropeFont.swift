@@ -16,7 +16,7 @@ extension Font {
         case semiBold = "SemiBold"
         case bold = "Bold"
         case extraBold = "ExtraBold"
-        
+
         var weight: Weight {
             switch self {
             case .extraLight: return .light
@@ -29,7 +29,7 @@ extension Font {
             }
         }
     }
-    
+
 //    static func manrope(_ weight: ManropeWeight = .regular, size: CGFloat? = nil) -> Font {
 //        if let size = size {
 //            return custom("Manrope-VariableFont_wght", size: size).weight(weight.weight)
@@ -38,7 +38,7 @@ extension Font {
 //                .weight(weight.weight)
 //        }
 //    }
-    
+
     static func manrope(_ weight: ManropeWeight = .regular, textStyle: TextStyle = .body) -> Font {
         custom("Manrope-VariableFont_wght", size: UIFont.preferredFont(forTextStyle: textStyle.uiTextStyle).pointSize)
             .weight(weight.weight)

@@ -1,36 +1,12 @@
 //
-//  ContentView.swift
+//  BotView.swift
 //  OLMoE.swift
 //
-//  Created by Luca Soldaini on 2024-09-16.
+//  Created by Ken Adamson on 11/17/24.
 //
 
+
 import SwiftUI
-
-class Bot: LLM {
-    static let modelFileName = "olmoe-1b-7b-0924-instruct-q4_k_m.gguf"
-    static let modelFileURL = URL.modelsDirectory.appendingPathComponent(modelFileName)
-
-    convenience init() {
-        let deviceName = UIDevice.current.model
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM d, yyyy"
-        let currentDate = dateFormatter.string(from: Date())
-        
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "h:mm a"
-        let currentTime = timeFormatter.string(from: Date())
-        
-        let systemPrompt = "You are OLMoE (Open Language Mixture of Expert), a small language model running on \(deviceName). You have been developed at the Allen Institute for AI (Ai2) in Seattle, WA, USA. Today is \(currentDate). The time is \(currentTime)."
-    
-        guard FileManager.default.fileExists(atPath: Bot.modelFileURL.path) else {
-            fatalError("Model file not found. Please download it first.")
-        }
-        
-//        self.init(from: Bot.modelFileURL, template: .OLMoE(systemPrompt))
-        self.init(from: Bot.modelFileURL, template: .OLMoE())
-    }
-}
 
 struct BotView: View {
     @StateObject var bot: Bot
@@ -42,11 +18,11 @@ struct BotView: View {
     @State private var shareURL: URL?
     @State private var showShareSheet = false
     @FocusState private var isTextEditorFocused: Bool
-    
+
     init(_ bot: Bot) {
         _bot = StateObject(wrappedValue: bot)
     }
-    
+
     func respond() {
         isGenerating = true
         Task {
@@ -59,7 +35,7 @@ struct BotView: View {
             }
         }
     }
-    
+
     func stop() {
         bot.stop()
         input = "" // Clear the input
@@ -69,38 +45,38 @@ struct BotView: View {
             bot.setOutput(to: "")
         }
     }
-    
+
     func shareConversation() {
         isSharing = true
         Task {
             do {
                 let apiKey = Configuration.apiKey
                 let apiUrl = "https://ziv3vcg14i.execute-api.us-east-1.amazonaws.com/prod"
-                
+
                 let modelName = "olmoe-1b-7b-0924-instruct-q4_k_m"
                 let systemFingerprint = "\(modelName)-\(AppInfo.shared.appId)"
-                
+
                 let messages = bot.history.map { chat in
                     ["role": chat.role == .user ? "user" : "assistant", "content": chat.content]
                 }
-                
+
                 let payload: [String: Any] = [
                     "model": modelName,
                     "system_fingerprint": systemFingerprint,
                     "created": Int(Date().timeIntervalSince1970),
                     "messages": messages
                 ]
-                
+
                 let jsonData = try JSONSerialization.data(withJSONObject: payload)
-                
+
                 var request = URLRequest(url: URL(string: apiUrl)!)
                 request.httpMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
                 request.httpBody = jsonData
-                
+
                 let (data, response) = try await URLSession.shared.data(for: request)
-                
+
                 if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                     let responseString = String(data: data, encoding: .utf8)!
                     if let jsonData = responseString.data(using: .utf8),
@@ -124,13 +100,13 @@ struct BotView: View {
             } catch {
                 print("Error sharing conversation: \(error)")
             }
-            
+
             await MainActor.run {
                 isSharing = false
             }
         }
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             contentView(in: geometry)
@@ -141,12 +117,12 @@ struct BotView: View {
             }
         })
     }
-    
+
     private func contentView(in geometry: GeometryProxy) -> some View {
         ZStack {
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(.all)
-            
+
             VStack(alignment: .leading) {
                 if !bot.output.isEmpty || isGenerating || !bot.history.isEmpty {
                     ScrollViewReader { proxy in
@@ -164,14 +140,14 @@ struct BotView: View {
                                 }
                                 .opacity(0.5)
                                 .font(.manrope().monospaced())
-                                
+
                                 // Display current output
                                 Text(bot.output)
                                     .monospaced()
                                     .foregroundColor(Color("TextColor"))
                                     .id("bottomID") // Unique ID for scrolling
                                 Color.clear.frame(height: 1).id("bottomID2")
-                                
+
                             }
                         }
                         .onChange(of: bot.output) { _ in
@@ -184,7 +160,7 @@ struct BotView: View {
                                     proxy.scrollTo("bottomID2", anchor: .bottom)
                                 }
                             }
-                            
+
                         }
                         .onChange(of: scrollToBottom) { newValue in
                             if newValue {
@@ -213,7 +189,7 @@ struct BotView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 Spacer()
-                
+
                 HStack(alignment: .bottom, spacing: 8) {
                     ZStack(alignment: .topLeading) {
                         TextEditor(text: $input)
@@ -238,14 +214,14 @@ struct BotView: View {
                                     self.hideKeyboard()
                                 }
                             })
-                        
+
                         if input.isEmpty {
                             Text("Message")
                                 .padding([.horizontal], 4)
                                 .padding([.vertical], 8)
                                 .foregroundColor(.gray)
                         }
-                            
+
                     }
                     VStack(spacing: 8) {
                         Button(action: {
@@ -298,81 +274,5 @@ struct BotView: View {
         .gesture(TapGesture().onEnded({
             isTextEditorFocused = false
         }))
-    }
-}
-
-struct ViewHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat { 0 }
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = max(value, nextValue())
-    }
-}
-
-
-// Add this struct to handle the UIActivityViewController
-struct ActivityViewController: UIViewControllerRepresentable {
-    let activityItems: [Any]
-    let applicationActivities: [UIActivity]? = nil
-
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ActivityViewController>) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
-        return controller
-    }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: UIViewControllerRepresentableContext<ActivityViewController>) {}
-}
-
-struct ContentView: View {
-    @StateObject private var downloadManager = BackgroundDownloadManager.shared
-    @State private var bot: Bot?
-    @State private var showDisclaimerPage : Bool = true
-    @State private var disclaimerPageIndex: Int = 0
-
-    var body: some View {
-        VStack {
-            if let bot = bot {
-                BotView(bot)
-            } else {
-                ModelDownloadView()
-            }
-        }
-        .onChange(of: downloadManager.isModelReady) { newValue in
-            if newValue && bot == nil {
-                initializeBot()
-            }
-        }
-        .popover(isPresented: $showDisclaimerPage) {
-            let page = Disclaimer.pages[disclaimerPageIndex]
-            DisclaimerPage(
-                title: page.title,
-                message: page.text,
-                confirm: DisclaimerPage.PageButton(
-                    text: page.buttonText,
-                    onDismiss: {
-                        nextInfoPage()
-                    })
-            )
-            .presentationBackground(Color("BackgroundColor"))
-        }
-        .onAppear(perform: checkModelAndInitializeBot)
-    }
-
-    private func nextInfoPage() {
-        disclaimerPageIndex = min(Disclaimer.pages.count, disclaimerPageIndex + 1)
-        if disclaimerPageIndex >= Disclaimer.pages.count {
-            disclaimerPageIndex = 0
-            showDisclaimerPage = false
-        }
-    }
-        
-    private func checkModelAndInitializeBot() {
-        if FileManager.default.fileExists(atPath: Bot.modelFileURL.path) {
-            downloadManager.isModelReady = true
-            initializeBot()
-        }
-    }
-
-    private func initializeBot() {
-        bot = Bot()
     }
 }
