@@ -35,10 +35,16 @@ class BackgroundDownloadManager: NSObject, ObservableObject, URLSessionDownloadD
 
     private override init() {
         super.init()
+        #if targetEnvironment(macCatalyst)
+        // Use regular session for Mac Catalyst
+        backgroundSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        #else
+        // Use background session for iOS
         let config = URLSessionConfiguration.background(withIdentifier: "ai.olmo.OLMoE.backgroundDownload")
         config.isDiscretionary = false
         config.sessionSendsLaunchEvents = true
         backgroundSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
+        #endif
 
         startNetworkMonitoring()
     }

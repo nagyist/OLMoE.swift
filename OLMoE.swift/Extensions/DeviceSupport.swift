@@ -13,6 +13,8 @@ import os
 func isDeviceSupported() -> Bool {
     #if targetEnvironment(simulator)
     return true
+    #elseif targetEnvironment(macCatalyst)
+    return true
     #else
     let deviceModel = UIDevice.current.modelName
 
