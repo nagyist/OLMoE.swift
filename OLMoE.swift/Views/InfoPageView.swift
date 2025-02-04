@@ -16,6 +16,7 @@ struct InfoButton: View {
             Image(systemName: "info.circle")
                 .foregroundColor(Color("TextColor"))
         }
+        .buttonStyle(.plain)
         .clipShape(Circle())
         .background(
             RadialGradient(
@@ -43,6 +44,7 @@ struct InfoView: View {
                             .frame(width: 40, height: 40)
                             .foregroundColor(Color("TextColor"))
                     }
+                    .buttonStyle(.plain)
                     .clipShape(Circle())
                 }
 
