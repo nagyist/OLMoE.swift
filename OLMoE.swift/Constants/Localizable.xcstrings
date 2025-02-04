@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "(The model requires ~6 GB and this device has: %@ GB available.)" : {
 
     },
