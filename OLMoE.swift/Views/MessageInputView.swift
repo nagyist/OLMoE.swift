@@ -41,13 +41,14 @@ struct MessageInputView: View {
                     Button(action: stop) {
                         Image("StopIcon")
                     }
+                    .buttonStyle(.plain)
                 } else {
                     Button(action: respond) {
                         Image("SendIcon")
                     }
+                    .buttonStyle(.plain)
                     .disabled(!hasValidInput)
                     .opacity(hasValidInput ? 1 : 0.5)
-
                 }
             }
             .onTapGesture {
