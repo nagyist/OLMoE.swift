@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "(The model requires ~6 GB and this device has: %@ GB available.)" : {
 
     },
@@ -63,6 +66,28 @@
     "Flush Model" : {
 
     },
+    "Message OLMoE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message OLMoE"
+          }
+        }
+      }
+    },
+    "Message OLMoE (Press Return to send)" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message OLMoE (Press Return to send)"
+          }
+        }
+      }
+    },
     "Model is ready to use!" : {
 
     },
@@ -84,7 +109,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hello! I’m OLMoE, a fully open, state-of-the-art language model running locally on your device."
+            "value" : "Hello! I'm OLMoE, a fully open, state-of-the-art language model running locally on your device."
           }
         }
       }

@@ -20,7 +20,13 @@ struct MessageInputView: View {
 
     var body: some View {
         HStack(alignment: .top) {
-            TextField("Empty Input Prompt", text: $input, axis: .vertical)
+            TextField(
+                UIDevice.current.userInterfaceIdiom == .mac ?
+                    String(localized: "Message OLMoE (Press Return to send)") :
+                    String(localized: "Message OLMoE"),
+                text: $input,
+                axis: .vertical
+            )
                 .scrollContentBackground(.hidden)
                 .multilineTextAlignment(.leading)
                 .lineLimit(10)
@@ -35,6 +41,14 @@ struct MessageInputView: View {
                 .disabled(isInputDisabled)
                 .opacity(isInputDisabled ? 0.6 : 1)
                 .padding(12)
+                .onSubmit {
+                    #if targetEnvironment(macCatalyst)
+                    if hasValidInput {
+                        respond()
+                    }
+                    #endif
+                }
+                .submitLabel(.send)
 
             ZStack {
                 if isGenerating && !stopSubmitted {
@@ -47,6 +61,7 @@ struct MessageInputView: View {
                     }
                     .disabled(!hasValidInput)
                     .opacity(hasValidInput ? 1 : 0.5)
+                    .keyboardShortcut(.defaultAction)
 
                 }
             }
