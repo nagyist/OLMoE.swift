@@ -18,15 +18,7 @@ struct InfoButton: View {
         }
         .buttonStyle(.plain)
         .clipShape(Circle())
-        .background(
-            RadialGradient(
-                gradient: Gradient(colors: [
-                    Color("BackgroundColor").opacity(0.9), Color.clear,
-                ]),
-                center: .center,
-                startRadius: 20,
-                endRadius: 40)
-        )
+        .background(Color.clear)
     }
 }
 
