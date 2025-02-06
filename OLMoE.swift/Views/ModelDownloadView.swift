@@ -74,7 +74,7 @@ class BackgroundDownloadManager: NSObject, ObservableObject, URLSessionDownloadD
             return
         }
 
-        guard let url = URL(string: "https://dolma-artifacts.org/app/olmoe-1b-7b-0924-instruct-q4_k_m.gguf") else { return }
+        guard let url = URL(string: AppConstants.Model.downloadURL) else { return }
 
         isDownloading = true
         downloadError = nil
@@ -210,6 +210,7 @@ struct Ai2Logo: View {
 /// A view that displays the model download progress and status.
 struct ModelDownloadView: View {
     @StateObject private var downloadManager = BackgroundDownloadManager.shared
+    @State private var showDownloadConfirmation = false
 
     public var body: some View {
         ZStack {
@@ -254,8 +255,42 @@ struct ModelDownloadView: View {
                     Spacer()
                         .frame(height: 16)
 
-                    Button("Download Model", action: downloadManager.startDownload)
-                        .buttonStyle(.PrimaryButton)
+                    Button("Download Model") {
+                        showDownloadConfirmation = true
+                    }
+                    .buttonStyle(.PrimaryButton)
+                    .sheet(isPresented: $showDownloadConfirmation) {
+                        SheetWrapper {
+                            HStack {
+                                Spacer()
+                                CloseButton(action: { showDownloadConfirmation = false })
+                            }
+                            Spacer()
+                            VStack(spacing: 20) {
+                                Text("Download Model")
+                                    .font(.title())
+
+                                Text("The model requires 4.21GB of storage space. Would you like to proceed with the download?")
+                                    .multilineTextAlignment(.center)
+                                    .font(.body())
+
+                                VStack(spacing: 12) {
+                                    Button {
+                                        showDownloadConfirmation = false
+                                        downloadManager.startDownload()
+                                    } label: {
+                                        HStack {
+                                            Image(systemName: "arrow.down.circle.fill")
+                                            Text("Start Download")
+                                        }
+                                    }
+                                    .buttonStyle(.PrimaryButton)
+                                }
+                            }
+                                .padding()
+                            Spacer()
+                        }
+                    }
                 }
 
                 if let error = downloadManager.downloadError {
