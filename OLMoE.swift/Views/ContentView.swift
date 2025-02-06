@@ -272,6 +272,7 @@ struct BotView: View {
                     .background(Color("LightGreen"))
                     .clipShape(Circle())
             }
+            .buttonStyle(.plain)
             .opacity(shouldShowScrollButton() ? 1 : 0)
             .transition(.opacity)
             .animation(
@@ -367,8 +368,17 @@ struct BotView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                #if targetEnvironment(macCatalyst)
+                HStack(spacing: 12) {
+                    shareButton()
+                        .buttonStyle(.plain)
+                    trashButton()
+                        .buttonStyle(.plain)
+                }
+                #else
                 shareButton()
                 trashButton()
+                #endif
             }
         }
     }
@@ -466,8 +476,6 @@ struct ContentView: View {
             .sheet(isPresented: $disclaimerState.showDisclaimerPage) {
                 SheetWrapper {
                     DisclaimerPage(
-                        allowOutsideTapDismiss: disclaimerState.allowOutsideTapDismiss,
-                        isPresented: $disclaimerState.showDisclaimerPage,
                         message: disclaimerState.activeDisclaimer?.text ?? "",
                         title: disclaimerState.activeDisclaimer?.title ?? "",
                         titleText: disclaimerState.activeDisclaimer?.headerTextContent ?? [],
