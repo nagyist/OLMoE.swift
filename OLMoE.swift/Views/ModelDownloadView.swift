@@ -204,6 +204,9 @@ struct Ai2Logo: View {
         }
         .padding(.horizontal, 0)
         .padding(.vertical, 0)
+        #if targetEnvironment(macCatalyst)
+        .padding(.bottom, 20)
+        #endif
     }
 }
 
