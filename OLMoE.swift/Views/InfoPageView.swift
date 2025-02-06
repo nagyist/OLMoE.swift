@@ -13,7 +13,6 @@ struct InfoButton: View {
 
     var body: some View {
         ToolbarButton(action: action, imageName: "info.circle")
-        .clipShape(Circle())
         #if targetEnvironment(macCatalyst)
             .padding(.trailing, 12)
             .padding(.top, 4)
