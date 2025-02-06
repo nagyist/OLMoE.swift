@@ -84,6 +84,7 @@
           }
         }
       }
+    },
     "However, you can try using OLMoE at the Ai2 Playground. This option does not download the model file to your device, but instead submits user input to a hosted version of OLMoE to remotely generate responses." : {
 
     },
