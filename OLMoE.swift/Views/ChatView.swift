@@ -285,6 +285,11 @@ public struct ChatView: View {
             let newMessagesCount = getUserChats(history: newHistory).count
             if newMessagesCount > 1 {
                 // Set new height based on current content plus outer height
+                #if targetEnvironment(macCatalyst)
+                    // This assignment would happen in handleKeyboardChange but there is no on-screen keyboard on Mac
+                    self.contentHeight = scrollState.contentHeight
+                #endif
+
                 self.newHeight = self.contentHeight + self.outerHeight
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
