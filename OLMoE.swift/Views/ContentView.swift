@@ -361,15 +361,10 @@ struct BotView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                #if targetEnvironment(macCatalyst)
                 HStack(spacing: 20) {
                     shareButton()
                     trashButton()
                 }
-                #else
-                shareButton()
-                trashButton()
-                #endif
             }
         }
     }

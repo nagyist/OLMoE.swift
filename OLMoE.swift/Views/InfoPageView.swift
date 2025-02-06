@@ -16,7 +16,7 @@ struct InfoButton: View {
         .clipShape(Circle())
         #if targetEnvironment(macCatalyst)
             .padding(.trailing, 12)
-            .padding(.top, 2)
+            .padding(.top, 4)
         #endif
     }
 }
