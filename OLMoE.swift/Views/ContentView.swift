@@ -78,7 +78,11 @@ struct BotView: View {
 
     func respond() {
         isGenerating = true
-        isTextEditorFocused = false
+        #if targetEnvironment(macCatalyst)
+            isTextEditorFocused = true
+        #else
+            isTextEditorFocused = false
+        #endif
         stopSubmitted = false
         let originalInput = input.trimmingCharacters(in: .whitespacesAndNewlines)
         input = "" // Clear the input after sending
@@ -91,6 +95,9 @@ struct BotView: View {
                 bot.setOutput(to: "")
                 isGenerating = false
                 stopSubmitted = false
+                #if targetEnvironment(macCatalyst)
+                    isTextEditorFocused = true  // Mac Only. Re-focus after response
+                #endif
             }
         }
     }
