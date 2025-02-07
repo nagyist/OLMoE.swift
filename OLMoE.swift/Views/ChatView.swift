@@ -171,6 +171,9 @@ public struct ChatView: View {
                 .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
                     handleKeyboardChange(newHeight, proxy)
                 }
+                .onChange(of: geometry.size.height) { _, newHeight in
+                    self.outerHeight = newHeight
+                }
                 .preferredColorScheme(.dark)
             }
             .onAppear {
