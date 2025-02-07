@@ -151,6 +151,9 @@ public struct ChatView: View {
     /// An observable object that tracks keyboard height changes.
     @StateObject private var keyboardResponder = KeyboardResponder()
 
+    /// Add this state variable at the top with other @State vars
+    @State private var lastUserMessageId: UUID?
+
     public var body: some View {
         GeometryReader { geometry in
             ScrollViewReader { proxy in
@@ -283,7 +286,9 @@ public struct ChatView: View {
     private func handleHistoryChange(_ newHistory: [Chat], _ proxy: ScrollViewProxy) {
         if let lastMessage = getLatestUserChat() {
             let newMessagesCount = getUserChats(history: newHistory).count
-            if newMessagesCount > 1 {
+            let isNewUserMessage = lastMessage.id != lastUserMessageId
+
+            if newMessagesCount > 1 && isNewUserMessage {
                 // Set new height based on current content plus outer height
                 #if targetEnvironment(macCatalyst)
                     // This assignment would happen in handleKeyboardChange but there is no on-screen keyboard on Mac
@@ -298,6 +303,7 @@ public struct ChatView: View {
                     }
                 }
             }
+            lastUserMessageId = lastMessage.id
         }
     }
 
