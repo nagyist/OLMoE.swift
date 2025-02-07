@@ -173,9 +173,7 @@ public struct ChatView: View {
                 }
                 #if targetEnvironment(macCatalyst)
                     .onChange(of: geometry.size.height) { _, newHeight in
-                        if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
-                            self.outerHeight = newHeight
-                        }
+                        self.outerHeight = newHeight
                     }
                 #endif
                 .preferredColorScheme(.dark)
