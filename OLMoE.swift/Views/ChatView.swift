@@ -171,9 +171,13 @@ public struct ChatView: View {
                 .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
                     handleKeyboardChange(newHeight, proxy)
                 }
-                .onChange(of: geometry.size.height) { _, newHeight in
-                    self.outerHeight = newHeight
-                }
+                #if targetEnvironment(macCatalyst)
+                    .onChange(of: geometry.size.height) { _, newHeight in
+                        if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac {
+                            self.outerHeight = newHeight
+                        }
+                    }
+                #endif
                 .preferredColorScheme(.dark)
             }
             .onAppear {
