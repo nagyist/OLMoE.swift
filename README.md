@@ -1,7 +1,11 @@
 # Ai2 OLMoE
 
 <p align="center">
-  <img src="./doc_assets/App_Main.png" alt="App Main" width="250"/>
+  <img src="./doc_assets/App_Main.png" alt="App Main" width="250"/><br>
+  <img alt="App store Badge" src="https://img.shields.io/badge/AppStore%20-%20blue?style=flat&logo=appstore&label=Apple&labelColor=%23262730&color=%234494ED&link=https%3A%2F%2Fapps.apple.com%2Fus%2Fapp%2Fai2-olmoe%2Fid6738533815">
+  <img alt="Static Badge" src="https://img.shields.io/badge/Discord%20-%20blue?style=flat&logo=discord&label=Ai2&labelColor=%23262730&color=%235B65E9&link=https%3A%2F%2Fdiscord.gg%2FsZq3jTNVNG">
+
+
 </p>
 
 Ai2 OLMoE is an AI chatbot powered by the [OLMoE](https://huggingface.co/collections/allenai/olmoe-66cf678c047657a30c8cd3da) model. Unlike cloud-based AI assistants, **OLMoE runs entirely on your device**, ensuring complete **privacy** and **offline accessibility**—even in **Flight Mode**.
