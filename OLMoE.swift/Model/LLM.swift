@@ -86,6 +86,9 @@ open class LLM: ObservableObject {
     /// Cached model state for continuation of conversations
     public var savedState: Data?
 
+    /// Metrics for tracking inference performance and token counts
+    public var metrics = InferenceMetrics()
+
     /// Current generated output text
     @Published public private(set) var output = ""
     @MainActor public func setOutput(to newOutput: consuming String) {
@@ -223,6 +226,8 @@ open class LLM: ObservableObject {
         /// Sample the next token with a valid context
         let token = llama_sampler_sample(sampler, context.pointer, self.batch.n_tokens - 1) // Use batch token count for correct context
 
+        metrics.recordToken()
+
         self.batch.clear()
         self.batch.add(token, self.nPast, [0], true)
         self.nPast += 1 // Increment the token count after predicting a new token
@@ -251,7 +256,9 @@ open class LLM: ObservableObject {
         context = context ?? .init(model, params)
         let tokens = encode(input)
         self.inputTokenCount = Int32(tokens.count)
-        print("inputTokenCount: ", self.inputTokenCount)
+
+        metrics.inputTokenCount = self.inputTokenCount
+
         if self.maxTokenCount <= self.nPast + self.inputTokenCount {
             self.trimKvCache()
         }
@@ -337,6 +344,7 @@ open class LLM: ObservableObject {
                     return output.finish()
                 }
 
+                metrics.start()
                 var token = await self.predictNextToken()
                 while self.emitDecoded(token: token, to: output) {
                     if self.nPast >= self.maxTokenCount {
@@ -344,6 +352,8 @@ open class LLM: ObservableObject {
                     }
                     token = await self.predictNextToken()
                 }
+
+                metrics.stop()
                 output.finish()
             }
         }
@@ -528,4 +538,5 @@ extension LLM {
         self.nPast = llama_get_kv_cache_token_count(self.context.pointer) + beginningOfSequenceOffset
     }
 }
+
 

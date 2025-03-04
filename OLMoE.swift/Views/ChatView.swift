@@ -127,6 +127,9 @@ public struct ChatView: View {
     /// The output text from the bot.
     public var output: String
 
+    /// Metrics for displaying inference performance and token counts
+    public var metrics: InferenceMetrics
+
     /// A binding that indicates whether the bot is currently generating a response.
     @Binding var isGenerating: Bool
 
