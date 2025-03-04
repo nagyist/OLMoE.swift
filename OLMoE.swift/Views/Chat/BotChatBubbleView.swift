@@ -68,22 +68,24 @@ public struct BotChatBubble: View {
                         .textSelection(.enabled) // Enable text selection for manual copying
 
                     // Copy button
-                    Button(action: {
-                        copyFullText()
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: showCopyFeedback ? "checkmark" : "doc.on.doc")
-                                .font(.body())
-                            if showCopyFeedback {
-                                Text("Copied")
+                    if !isGenerating, text != "..." {
+                        Button(action: {
+                            copyFullText()
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: showCopyFeedback ? "checkmark" : "doc.on.doc")
                                     .font(.body())
+                                if showCopyFeedback {
+                                    Text("Copied")
+                                        .font(.body())
+                                }
                             }
+                            .padding(.top, 1)
+                            .background(Color.clear)
+                            .foregroundColor(Color("AccentColor"))
                         }
-                        .padding(.top, 1)
-                        .background(Color.clear)
-                        .foregroundColor(Color("AccentColor"))
+                        .buttonStyle(PlainButtonStyle())
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             Spacer()
@@ -117,8 +119,20 @@ public struct BotChatBubble: View {
     ScrollView {
         VStack(spacing: 20) {
             BotChatBubble(
-                text: "Hello! This is a simple text message from the bot.",
+                text: "",
+                maxWidth: UIScreen.main.bounds.width,
+                isGenerating: true
+            )
+            
+            BotChatBubble(
+                text: "...",
                 maxWidth: UIScreen.main.bounds.width
+            )
+            
+            BotChatBubble(
+                text: "This text is being gener…",
+                maxWidth: UIScreen.main.bounds.width,
+                isGenerating: true
             )
 
             BotChatBubble(
@@ -128,5 +142,6 @@ public struct BotChatBubble: View {
         }
         .padding()
         .background(Color("BackgroundColor"))
+        .preferredColorScheme(.dark)
     }
 }
