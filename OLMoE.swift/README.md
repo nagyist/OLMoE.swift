@@ -1,4 +1,31 @@
-# OLMoE Swift
+<div align="center">
+  <img src="../doc_assets/App_Main.png" alt="App Main" width="250"/>
+  <br>
+  <h1>Ai2 OLMoE</h1>
+</div>
+<p align="center">
+  <a href="https://github.com/allenai/OLMo/blob/main/LICENSE">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/allenai/OLMo">
+  </a>
+  <a href="https://playground.allenai.org">
+    <img alt="Playground" src="https://img.shields.io/badge/Ai2-Playground-F0529C">
+  </a>
+  <a href="https://discord.gg/sZq3jTNVNG">
+    <img alt="Discord" src="https://img.shields.io/badge/Discord%20-%20blue?style=flat&logo=discord&label=Ai2&color=%235B65E9">
+  </a>
+</p>
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Building the iOS app to run on a simulator](#building-the-ios-app-to-run-on-a-simulator)
+- [Building the iOS App with custom settings](#building-the-ios-app-with-custom-settings)
+- [Running on MacOS](#running-on-macos)
+- [Running on a physical device](#running-on-a-physical-device)
+- [Enabling the Sharing Feature](#enabling-the-sharing-feature)
+- [Troubleshooting](#troubleshooting)
+  - [Ensure the correct configuration is being used](#ensure-the-correct-configuration-is-being-used)
+  - [Ensure the correct team is selected](#ensure-the-correct-team-is-selected)
 
 ## Requirements
 
@@ -39,7 +66,7 @@ Default values are provided in `BuildConfig/project-defaults.xcconfig`.
     See [Enabling the Sharing Feature](#enabling-the-sharing-feature) for more information.
 
     - The `DEVELOPMENT_TEAM_ID` is your team ID you located in step 1.
-    Building to a physical device requires a development team ID.
+    Building to a physical device or macOS requires a development team ID.
 
     - The `BUNDLE_VERSION` is the number used to identify the [current project version](https://developer.apple.com/documentation/xcode/build-settings-reference#Current-Project-Version) and the iteration of the [bundle version](https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleversion).
 
@@ -65,11 +92,41 @@ Default values are provided in `BuildConfig/project-defaults.xcconfig`.
 
 1) Run the project
 
+## Running on MacOS
+
+Our project uses Mac Catalyst, a compatibility layer letting our iOS code base run natively on macOS. A valid Development Team ID is required.
+
+1) In the Signing & Capabilities section for MacOS, click on "Enable Development Signing"
+
+    ![Enable Development Signing](../doc_assets/Enable_Development_Signing_MacOS.png)
+
+1) Select "My Mac (Mac Catalyst)" in the device dropdown menu.
+
+    ![Select Device](../doc_assets/Select_Device_MacOS.png)
+
+1) Run the project.
+
+## Running on a physical device
+
+1) Ensure the device is connected to your mac via USB.
+
+1) In the Signing & Capabilities section, click on "Enable Development Signing"
+
+    ![Enable Development Signing](../doc_assets/Enable_Development_Signing.png)
+
+1) Select your device in the device dropdown menu.
+
+    ![Select Device](../doc_assets/Select_Device.png)
+
+1) Run the project by hitting **Run** ▶️ or press `Cmd + R`.
+
+    ![Run App](../doc_assets/Run_App.png)
+
 ## Enabling the Sharing Feature
 
 Requires an _AWS Lambda function_
 
-1) Follow and deploy the lambda function as described in the [lambda README](../aws-lambda/README.md)
+1) Follow and deploy the lambda function as described in the [lambda README](../aws-lambda/README.md).
 
 ## Troubleshooting
 
@@ -86,17 +143,3 @@ Requires an _AWS Lambda function_
 1) In "Signing & Capabilities" ensure your correct team and bundle identifier match the ones in `build.xcconfig`
 
     ![Select Project OLMoE Swift](../doc_assets/Validate_Team_and_Bundle_ID.png)
-
-### Running on a physical device
-
-1) Ensure the device is connected to your mac via USB.
-
-1) In the Signing & Capabilities section, click on "Enable Development Signing"
-
-    ![Enable Development Signing](../doc_assets/Enable_Development_Signing.png)
-
-1) Select your device in the device dropdown menu.
-
-    ![Select Device](../doc_assets/Select_Device.png)
-
-1) Run the project.
