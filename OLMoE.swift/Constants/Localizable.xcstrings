@@ -14,6 +14,15 @@
         }
       }
     },
+    "%d input" : {
+
+    },
+    "%d output" : {
+
+    },
+    "%d total" : {
+
+    },
     "%lld%%" : {
 
     },
@@ -63,6 +72,9 @@
     "Flush Model" : {
 
     },
+    "However, you can try using OLMoE at the Ai2 Playground. This option does not download the model file to your device, but instead submits user input to a hosted version of OLMoE to remotely generate responses." : {
+
+    },
     "Message OLMoE" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -84,9 +96,6 @@
           }
         }
       }
-    },
-    "However, you can try using OLMoE at the Ai2 Playground. This option does not download the model file to your device, but instead submits user input to a hosted version of OLMoE to remotely generate responses." : {
-
     },
     "Model is ready to use!" : {
 
@@ -110,6 +119,9 @@
 
     },
     "This device does not have the 8GB physical RAM required to run OLMoE locally." : {
+
+    },
+    "Tokens:" : {
 
     },
     "Try OLMoE at the Ai2 Playground" : {

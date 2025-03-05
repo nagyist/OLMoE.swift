@@ -130,6 +130,9 @@ public struct ChatView: View {
     /// Metrics for displaying inference performance and token counts
     public var metrics: InferenceMetrics
 
+    /// Controls whether to show the metrics view
+    @Binding var showMetrics: Bool
+
     /// A binding that indicates whether the bot is currently generating a response.
     @Binding var isGenerating: Bool
 
@@ -159,30 +162,37 @@ public struct ChatView: View {
 
     public var body: some View {
         GeometryReader { geometry in
-            ScrollViewReader { proxy in
-                ScrollView {
-                    chatContent(proxy, parentWidth: geometry.size.width)
+            VStack(spacing: 0) {
+                // Conditionally show metrics view based on showMetrics binding
+                if showMetrics {
+                    MetricsView(metrics: metrics)
                 }
-                .background(scrollHeightTracker())
-                .coordinateSpace(name: ScrollState.ScrollSpaceName)
-                .onChange(of: history) { _, newHistory in
-                    handleHistoryChange(newHistory, proxy)
-                }
-                .onChange(of: stopSubmitted) { _, _ in
-                    self.newHeight = scrollState.contentHeight
-                }
-                .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
-                    handleKeyboardChange(newHeight, proxy)
-                }
-                #if targetEnvironment(macCatalyst)
-                    .onChange(of: geometry.size.height) { _, newHeight in
-                        self.outerHeight = newHeight
+
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        chatContent(proxy, parentWidth: geometry.size.width)
                     }
-                #endif
-                .preferredColorScheme(.dark)
-            }
-            .onAppear {
-                self.outerHeight = geometry.size.height
+                    .background(scrollHeightTracker())
+                    .coordinateSpace(name: ScrollState.ScrollSpaceName)
+                    .onChange(of: history) { _, newHistory in
+                        handleHistoryChange(newHistory, proxy)
+                    }
+                    .onChange(of: stopSubmitted) { _, _ in
+                        self.newHeight = scrollState.contentHeight
+                    }
+                    .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
+                        handleKeyboardChange(newHeight, proxy)
+                    }
+                    #if targetEnvironment(macCatalyst)
+                        .onChange(of: geometry.size.height) { _, newHeight in
+                            self.outerHeight = newHeight
+                        }
+                    #endif
+                    .preferredColorScheme(.dark)
+                }
+                .onAppear {
+                    self.outerHeight = geometry.size.height
+                }
             }
         }
     }
@@ -425,6 +435,8 @@ public struct ChatView: View {
     ChatView(
         history: exampleHistory,
         output: "",
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(true),
         isGenerating: .constant(false),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)
@@ -444,6 +456,8 @@ public struct ChatView: View {
     ChatView(
         history: exampleHistory,
         output: exampleOutput,
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(true),
         isGenerating: .constant(true),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)
@@ -463,6 +477,8 @@ public struct ChatView: View {
     ChatView(
         history: exampleHistory,
         output: exampleOutput,
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(false),
         isGenerating: .constant(true),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)
