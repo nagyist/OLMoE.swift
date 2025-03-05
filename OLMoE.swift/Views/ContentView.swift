@@ -46,6 +46,7 @@ struct BotView: View {
     @State private var isDeleteHistoryConfirmationVisible = false
     @State private var isScrolledToBottom = true
     @FocusState private var isTextEditorFocused: Bool
+    @Binding var showMetrics: Bool
     let disclaimerHandlers: DisclaimerHandlers
 
     // Add new state for text sharing
@@ -67,8 +68,9 @@ struct BotView: View {
         bot.history.isEmpty && !isGenerating && bot.output.isEmpty
     }
 
-    init(_ bot: Bot, disclaimerHandlers: DisclaimerHandlers) {
+    init(_ bot: Bot, showMetrics: Binding<Bool>, disclaimerHandlers: DisclaimerHandlers) {
         _bot = StateObject(wrappedValue: bot)
+        _showMetrics = showMetrics
         self.disclaimerHandlers = disclaimerHandlers
     }
 
@@ -111,7 +113,9 @@ struct BotView: View {
         Task { @MainActor in
             await bot.clearHistory()
             bot.setOutput(to: "")
-             input = "" // Clear the input
+            input = "" // Clear the input
+            // Reset metrics when clearing chat history
+            bot.metrics.reset()
         }
     }
 
@@ -303,6 +307,7 @@ struct BotView: View {
                                 history: bot.history,
                                 output: bot.output.trimmingCharacters(in: .whitespacesAndNewlines),
                                 metrics: bot.metrics,
+                                showMetrics: $showMetrics,
                                 isGenerating: $isGenerating,
                                 isScrolledToBottom: $isScrolledToBottom,
                                 stopSubmitted: $stopSubmitted
@@ -422,6 +427,9 @@ struct ContentView: View {
     /// A flag indicating whether to use mocked model responses.
     @State private var useMockedModelResponse: Bool = false
 
+    /// A flag indicating whether to show metrics.
+    @State private var showMetrics: Bool = false
+
     /// Logger for tracking events in the ContentView.
     let logger = Logger(subsystem: "com.allenai.olmoe", category: "ContentView")
 
@@ -438,7 +446,9 @@ struct ContentView: View {
                             }
                         )
                     } else if let bot = bot {
-                        BotView(bot, disclaimerHandlers: DisclaimerHandlers(
+                        BotView(bot,
+                               showMetrics: $showMetrics,
+                               disclaimerHandlers: DisclaimerHandlers(
                             setActiveDisclaimer: { self.disclaimerState.activeDisclaimer = $0 },
                             setAllowOutsideTapDismiss: { self.disclaimerState.allowOutsideTapDismiss = $0 },
                             setCancelAction: { self.disclaimerState.onCancel = $0 },
@@ -458,7 +468,16 @@ struct ContentView: View {
                 .toolbar {
                     AppToolbar(
                         leadingContent: {
-                            InfoButton(action: { showInfoPage = true })
+                            HStack {
+                                // Info button
+                                InfoButton(action: { showInfoPage = true })
+
+                                // Metrics toggle button - now using the MetricsButton component
+                                MetricsButton(
+                                    action: { showMetrics.toggle() },
+                                    isShowing: showMetrics
+                                )
+                            }
                         }
                     )
                 }
