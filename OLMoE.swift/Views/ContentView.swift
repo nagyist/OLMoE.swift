@@ -113,7 +113,9 @@ struct BotView: View {
         Task { @MainActor in
             await bot.clearHistory()
             bot.setOutput(to: "")
-             input = "" // Clear the input
+            input = "" // Clear the input
+            // Reset metrics when clearing chat history
+            bot.metrics.reset()
         }
     }
 

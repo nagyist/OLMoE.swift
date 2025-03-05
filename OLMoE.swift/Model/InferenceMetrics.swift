@@ -39,4 +39,13 @@ public struct InferenceMetrics {
         endTime = ProcessInfo.processInfo.systemUptime
         totalTokens = inputTokenCount + inferenceTokenCount
     }
+
+    /// Resets all metrics to their initial values
+    mutating func reset() {
+        inferenceTokenCount = 0
+        inputTokenCount = 0
+        totalTokens = 0
+        startTime = 0
+        endTime = 0
+    }
 }
