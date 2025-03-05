@@ -17,35 +17,37 @@
 
 ## Getting started with OLMoE app
 
-1. **Open the app** – Launch OLMoE app on your device.  
-2. **Download the model** – The app may prompt you to download the required model files. Just follow the instructions and wait for the download to complete.  
-3. **Ask questions** – Once the model is ready, type in your question, and the app will generate a response.  
+1. **Open the app** – Launch OLMoE app on your device.
+2. **Download the model** – The app may prompt you to download the required model files. Just follow the instructions and wait for the download to complete.
+3. **Ask questions** – Once the model is ready, type in your question, and the app will generate a response.
 
-We **don’t** store any of your queries or data—everything runs on your device. You can even use the app in **Flight Mode** with no internet connection.  
+We **don’t** store any of your queries or data—everything runs on your device. You can even use the app in **Flight Mode** with no internet connection.
 
 Enjoy a fully open, private, and offline capable AI experience with OLMoE.
 
 ## OLMoE.swift
 
 Clone the repository in your respective directory by
-```bash
+
+``` sh
 git clone https://github.com/allenai/OLMoE.swift.git
 ```
 
-- The project uses `.xcconfig` files for build configurations.
-Open Xcode and select OLMoE project, navigate to Info → Configurations Ensure that both Debug and Release use `build.xcconfig`.
+### Building the iOS app to run on a simulator
 
-- Open **Signing & Capabilities** in Xcode. Check ✅ **Automatically manage signing** and select your Apple Developer Team. Update the **Bundle Identifier** to something like `com.domain.app`.  
+1) Open the project in Xcode.
 
-- Change the Bundle Identifier to match your app’s domain. If you see a signing error, enable development signing:  
-  
-- Before running the app, select a device or simulator. Click on the device dropdown at the top. Choose an available simulator or a connected physical device. 
+1) Ensure the target device is set to an appropriate device (ie iPhone 15 Pro or higher)
 
-- Check that the correct **Team** and **Bundle Identifier** are set under **Signing & Capabilities**.  
+    ![Select Project OLMoE Swift](./doc_assets/Set_Target_Device.png)
 
-- Select the device or simulator and run the app.
+1) Run the project
 
-See [OLMoE.swift/README.md](OLMoE.swift/README.md) for more information.
+For more information see [OLMoE.swift/README.md](OLMoE.swift/README.md) or to
+
+- [run the iOS App with custom settings](./OLMoE.swift/README.md#building-the-ios-app-with-custom-settings)
+- [run on MacOS](./OLMoE.swift/README.md#running-on-macos)
+- [run on a physical device](OLMoE.swift/README.md#running-on-a-physical-device)
 
 ## Running OLMoE with Hugging Face
 
@@ -77,21 +79,24 @@ This project is open source. See [LICENSE](LICENSE) for more information.
 
 ## Open Source Dependencies
 
-This project relies on the following open-source libraries, each licensed under the **MIT License**:  
+This project relies on the following open-source libraries, each licensed under the **MIT License**:
 
-### [LlamaCPP](https://github.com/ggerganov/llama.cpp)  
-- **Author(s):** The ggml authors (2023-2024)  
-- **License:** MIT  
-- **Repository:** [LlamaCPP](https://github.com/ggerganov/llama.cpp)  
+### [LlamaCPP](https://github.com/ggerganov/llama.cpp)
 
-### [ggml](https://github.com/ggerganov/ggml)  
-- **Author(s):** The ggml authors (2023-2024)  
-- **License:** MIT  
-- **Repository:** [ggml](https://github.com/ggerganov/ggml)  
+- **Author(s):** The ggml authors (2023-2024)
+- **License:** MIT
+- **Repository:** [LlamaCPP](https://github.com/ggerganov/llama.cpp)
 
-### [MarkdownUI](https://github.com/gonzalezreal/swift-markdown-ui)  
-- **Author(s):** Guillermo Gonzalez (2020)  
-- **License:** MIT  
-- **Repository:** [MarkdownUI](https://github.com/gonzalezreal/swift-markdown-ui)  
+### [ggml](https://github.com/ggerganov/ggml)
+
+- **Author(s):** The ggml authors (2023-2024)
+- **License:** MIT
+- **Repository:** [ggml](https://github.com/ggerganov/ggml)
+
+### [MarkdownUI](https://github.com/gonzalezreal/swift-markdown-ui)
+
+- **Author(s):** Guillermo Gonzalez (2020)
+- **License:** MIT
+- **Repository:** [MarkdownUI](https://github.com/gonzalezreal/swift-markdown-ui)
 
 For more details on each license, visit the respective repositories linked above.

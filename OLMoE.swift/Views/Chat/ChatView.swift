@@ -81,6 +81,9 @@ public struct ChatView: View {
     /// The output text from the bot.
     public var output: String
 
+    /// Metrics for displaying inference performance and token counts
+    public var metrics: InferenceMetrics
+
     /// A binding that indicates whether the bot is currently generating a response.
     @Binding var isGenerating: Bool
 
@@ -105,6 +108,9 @@ public struct ChatView: View {
     /// An observable object that tracks keyboard height changes.
     @StateObject private var keyboardResponder = KeyboardResponder()
 
+    /// Add this state variable at the top with other @State vars
+    @State private var lastUserMessageId: UUID?
+
     public var body: some View {
         GeometryReader { geometry in
             ScrollViewReader { proxy in
@@ -122,6 +128,11 @@ public struct ChatView: View {
                 .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
                     handleKeyboardChange(newHeight, proxy)
                 }
+                #if targetEnvironment(macCatalyst)
+                    .onChange(of: geometry.size.height) { _, newHeight in
+                        self.outerHeight = newHeight
+                    }
+                #endif
                 .preferredColorScheme(.dark)
             }
             .onAppear {
@@ -237,8 +248,15 @@ public struct ChatView: View {
     private func handleHistoryChange(_ newHistory: [Chat], _ proxy: ScrollViewProxy) {
         if let lastMessage = getLatestUserChat() {
             let newMessagesCount = getUserChats(history: newHistory).count
-            if newMessagesCount > 1 {
+            let isNewUserMessage = lastMessage.id != lastUserMessageId
+
+            if newMessagesCount > 1 && isNewUserMessage {
                 // Set new height based on current content plus outer height
+                #if targetEnvironment(macCatalyst)
+                    // This assignment would happen in handleKeyboardChange but there is no on-screen keyboard on Mac
+                    self.contentHeight = scrollState.contentHeight
+                #endif
+
                 self.newHeight = self.contentHeight + self.outerHeight
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -247,6 +265,7 @@ public struct ChatView: View {
                     }
                 }
             }
+            lastUserMessageId = lastMessage.id
         }
     }
 

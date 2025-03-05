@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4885754D2D77756600F7A36F /* InferenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885754C2D77756300F7A36F /* InferenceMetrics.swift */; };
 		48952DF02D4D69D400476373 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 48952DEF2D4D69D400476373 /* MarkdownUI */; };
 		489710A22D14D22600F0DB43 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 489710A12D14D22600F0DB43 /* README.md */; };
 		489FD75C2CF13E4E0011E908 /* AttestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FD75B2CF13E4E0011E908 /* AttestManager.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		48194C372D14D7C500E76532 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		4885754C2D77756300F7A36F /* InferenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceMetrics.swift; sourceTree = "<group>"; };
 		489710A12D14D22600F0DB43 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		489FD75B2CF13E4E0011E908 /* AttestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttestManager.swift; sourceTree = "<group>"; };
 		48B806342CF54D9600E1CC0A /* LambdaResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LambdaResponseModel.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		B26FDB402CEAD47700E1D57C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4885754C2D77756300F7A36F /* InferenceMetrics.swift */,
 				48E37C1F2D02715B0030C57C /* KeyboardResponder.swift */,
 				48B806342CF54D9600E1CC0A /* LambdaResponseModel.swift */,
 				489FD75B2CF13E4E0011E908 /* AttestManager.swift */,
@@ -244,6 +247,7 @@
 				A046603D2CA3FAFA007BD14C /* Configuration.swift in Sources */,
 				A01180012C990F7600035007 /* LLM.swift in Sources */,
 				B26FDB5E2CEAD5CB00E1D57C /* Model.swift in Sources */,
+				4885754D2D77756600F7A36F /* InferenceMetrics.swift in Sources */,
 				A0117FEC2C990EAB00035007 /* OLMoE_swiftApp.swift in Sources */,
 				B26FDB502CEAD54400E1D57C /* Template.swift in Sources */,
 				B26FDB4E2CEAD53E00E1D57C /* Quantization.swift in Sources */,
@@ -405,6 +409,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -419,10 +424,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -453,6 +458,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -467,10 +473,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};
