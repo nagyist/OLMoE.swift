@@ -22,54 +22,8 @@ public struct UserChatBubble: View {
                 .cornerRadius(12)
                 .frame(maxWidth: maxWidth * 0.75, alignment: .trailing)
                 .font(.body())
+                .textSelection(.enabled)
         }
-    }
-}
-
-public struct BotChatBubble: View {
-    var text: String
-    var maxWidth: CGFloat
-    var isGenerating: Bool = false
-
-    public var body: some View {
-        HStack(alignment: .top, spacing: 6) {
-            Image("BotProfilePicture")
-                .resizable()
-                .frame(width: 20, height: 20)
-                .padding(4)
-                .background(Color("Surface"))
-                .clipShape(Circle())
-                .padding(.trailing, 12)
-
-            if isGenerating && text.isEmpty {
-                TypingIndicator()
-            } else {
-                Markdown(text)
-                    .padding(.top, -2)
-                    .background(Color("BackgroundColor"))
-                    .frame(maxWidth: maxWidth * 0.75, alignment: .leading)
-                    .font(.body())
-                    .markdownTextStyle(\.code) {
-                        FontFamilyVariant(.monospaced)
-                        FontSize(.em(0.85))
-                        BackgroundColor(Color("Surface").opacity(0.35))
-                    }
-                    .markdownBlockStyle(\.codeBlock) { configuration in
-                        configuration.label
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color("Surface").opacity(0.35))
-                            .markdownTextStyle {
-                                FontFamilyVariant(.monospaced)
-                                FontSize(.em(0.85))
-                            }
-                            .markdownMargin(top: 8, bottom: 8)
-                    }
-            }
-            Spacer()
-        }
-        .padding([.leading], 12)
     }
 }
 
