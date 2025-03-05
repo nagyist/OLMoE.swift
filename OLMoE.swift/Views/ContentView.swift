@@ -337,7 +337,11 @@ struct BotView: View {
                 Spacer()
 
                 if (isChatEmpty) {
-                    BotChatBubble(text: String(localized: "Welcome chat message", comment: "Default chat bubble when conversation is empty"), maxWidth: geometry.size.width)
+                    BotChatBubble(
+                        text: String(localized: "Welcome chat message", comment: "Default chat bubble when conversation is empty"),
+                        maxWidth: geometry.size.width,
+                        hideCopyButton: true
+                    )
                 }
 
                 MessageInputView(

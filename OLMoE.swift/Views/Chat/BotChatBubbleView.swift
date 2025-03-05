@@ -12,7 +12,11 @@ public struct BotChatBubble: View {
     var text: String
     var maxWidth: CGFloat
     var isGenerating: Bool = false
+    var hideCopyButton: Bool = false
 
+    private var copyButtonIsVisible: Bool {
+        !hideCopyButton && !isGenerating && text != "..."
+    }
     // State for tracking copy feedback
     @State private var showCopyFeedback = false
 
@@ -68,7 +72,7 @@ public struct BotChatBubble: View {
                         .textSelection(.enabled) // Enable text selection for manual copying
 
                     // Copy button
-                    if !isGenerating, text != "..." {
+                    if copyButtonIsVisible {
                         Button(action: {
                             copyFullText()
                         }) {
@@ -123,12 +127,12 @@ public struct BotChatBubble: View {
                 maxWidth: UIScreen.main.bounds.width,
                 isGenerating: true
             )
-            
+
             BotChatBubble(
                 text: "...",
                 maxWidth: UIScreen.main.bounds.width
             )
-            
+
             BotChatBubble(
                 text: "This text is being gener…",
                 maxWidth: UIScreen.main.bounds.width,
@@ -138,6 +142,12 @@ public struct BotChatBubble: View {
             BotChatBubble(
                 text: "This is a longer message that spans multiple lines to demonstrate how the bubble handles longer content and wraps text appropriately.",
                 maxWidth: UIScreen.main.bounds.width
+            )
+
+            BotChatBubble(
+                text: "Welcome Message!",
+                maxWidth: UIScreen.main.bounds.width,
+                hideCopyButton: true
             )
         }
         .padding()
