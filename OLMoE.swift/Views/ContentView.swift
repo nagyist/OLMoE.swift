@@ -302,6 +302,7 @@ struct BotView: View {
                             ChatView(
                                 history: bot.history,
                                 output: bot.output.trimmingCharacters(in: .whitespacesAndNewlines),
+                                metrics: bot.metrics,
                                 isGenerating: $isGenerating,
                                 isScrolledToBottom: $isScrolledToBottom,
                                 stopSubmitted: $stopSubmitted
