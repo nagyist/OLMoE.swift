@@ -35,7 +35,7 @@ enum InfoText {
             header:
                 "What data does Ai2 collect about me?",
             text: """
-                The only time this app collects data is when you choose to share a conversation. Once you share a conversation, we use this interaction data to identify areas for improvement and to develop new features that advance the scientific and educational purposes of Ai2, as described in our general [Terms of Use](https://allenai.org/terms/2024-09-25) and [Privacy Policy](https://allenai.org/privacy-policy).
+                OLMoE runs locally on your device and your interactions with the app will not be shared with Ai2. Ai2 will receive anonymized app development data though Apple's crash analytics APIs in accordance with our [Privacy Policy](https://allenai.org/privacy-policy).
                 """),
 
         HeaderTextPair(
