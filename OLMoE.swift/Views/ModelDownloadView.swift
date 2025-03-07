@@ -310,6 +310,9 @@ struct ModelDownloadView: View {
         .onAppear {
             if FileManager.default.fileExists(atPath: Bot.modelFileURL.path) {
                 downloadManager.isModelReady = true
+            } else {
+                // Model file doesn't exist, make sure isModelReady is false
+                downloadManager.isModelReady = false
             }
         }
     }
