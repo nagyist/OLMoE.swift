@@ -445,7 +445,7 @@ struct ContentView: View {
                                 useMockedModelResponse = true
                             }
                         )
-                    } else if let bot = bot {
+                    } else if downloadManager.isModelReady, let bot = bot {
                         BotView(bot,
                                showMetrics: $showMetrics,
                                disclaimerHandlers: DisclaimerHandlers(
@@ -463,6 +463,9 @@ struct ContentView: View {
                     if newValue && bot == nil {
                         initializeBot()
                     }
+                }
+                .onAppear {
+                    checkModelAndInitializeBot()
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -518,17 +521,23 @@ struct ContentView: View {
         }
     }
 
-    /// Checks if the model is ready and initializes the bot if it is.
+    /// Checks if the model exists before initializing the bot
     private func checkModelAndInitializeBot() {
         if FileManager.default.fileExists(atPath: Bot.modelFileURL.path) {
             downloadManager.isModelReady = true
             initializeBot()
+        } else {
+            downloadManager.isModelReady = false
         }
     }
 
     /// Initializes the bot instance and sets the loopback test response flag.
     private func initializeBot() {
-        bot = Bot()
-        bot?.loopBackTestResponse = useMockedModelResponse
+        do {
+            bot = try Bot()
+            bot?.loopBackTestResponse = useMockedModelResponse
+        } catch {
+            print("Error initializing bot: \(error)")
+        }
     }
 }
