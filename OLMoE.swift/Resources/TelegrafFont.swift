@@ -12,10 +12,10 @@ extension Font {
         custom("PP Telegraf", size: UIFont.preferredFont(forTextStyle: textStyle.uiTextStyle).pointSize)
             .weight(weight)
     }
-    
+
     static func telegraf(_ weight: Weight = .regular, size: CGFloat) -> Font {
         custom("PP Telegraf", size: size)
             .weight(weight)
     }
-    
+
 }
