@@ -230,6 +230,7 @@ struct BotView: View {
         if isSharing {
             SpinnerView(color: Color("AccentColor"))
         } else {
+            let isDisabled = isSharing || bot.history.isEmpty || isGenerating
             ToolbarButton(action: {
                 isTextEditorFocused = false
                 // disclaimerHandlers.setActiveDisclaimer(Disclaimers.ShareDisclaimer())
@@ -238,9 +239,8 @@ struct BotView: View {
                 // disclaimerHandlers.setConfirmAction({ shareConversation() })
                 // disclaimerHandlers.setShowDisclaimerPage(true)
                 showTextShareSheet = true
-            }, imageName: "square.and.arrow.up")
-             .disabled(isSharing || bot.history.isEmpty || isGenerating)
-             .opacity(isSharing || bot.history.isEmpty || isGenerating ? 0.5 : 1)
+            }, assetName: "ShareIcon", foregroundColor: Color("AccentColor"))
+             .disabled(isDisabled)
         }
     }
 
@@ -250,7 +250,7 @@ struct BotView: View {
             isTextEditorFocused = false
             isDeleteHistoryConfirmationVisible = true
             stop()
-        }, imageName: "trash.fill")
+        }, assetName: "NewChatIcon", foregroundColor: Color("LightGreen"))
             .alert("Delete history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
                 Button("Delete", action: deleteHistory)
                 Button("Cancel", role: .cancel) {
@@ -258,7 +258,6 @@ struct BotView: View {
                 }
             })
             .disabled(isDeleteButtonDisabled)
-            .opacity(isDeleteButtonDisabled ? 0.5 : 1)
     }
 
     @ViewBuilder
@@ -378,7 +377,12 @@ struct BotView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                HStack(spacing: 20) {
+                #if targetEnvironment(macCatalyst)
+                    let spacing: CGFloat = 20
+                #else
+                    let spacing: CGFloat = 32
+                #endif
+                HStack(alignment: .bottom, spacing: spacing) {
                     shareButton()
                     trashButton()
                 }
@@ -471,7 +475,7 @@ struct ContentView: View {
                 .toolbar {
                     AppToolbar(
                         leadingContent: {
-                            HStack {
+                            HStack(alignment: .bottom, spacing: 20) {
                                 // Info button
                                 InfoButton(action: { showInfoPage = true })
 

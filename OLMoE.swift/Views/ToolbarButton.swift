@@ -9,23 +9,45 @@ import SwiftUI
 
 struct ToolbarButton: View {
     let action: () -> Void
-    let imageName: String
+    let systemName: String?
+    let assetName: String?
+    let foregroundColor: Color?
     @State private var isHovering = false
+    @Environment(\.isEnabled) private var isEnabled
+
+    init(action: @escaping () -> Void, systemName: String, foregroundColor: Color? = Color("TextColor")) {
+        self.action = action
+        self.systemName = systemName
+        self.assetName = nil
+        self.foregroundColor = foregroundColor
+    }
+
+    init(action: @escaping () -> Void, assetName: String, foregroundColor: Color? = Color("TextColor")) {
+        self.action = action
+        self.systemName = nil
+        self.assetName = assetName
+        self.foregroundColor = foregroundColor
+    }
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: imageName)
-                #if targetEnvironment(macCatalyst)
-                    .foregroundColor(Color("MacIconColor"))
-                    .fontWeight(.bold)
-                    .frame(width: 20, height: 20)
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .background(isHovering ? Color.gray.opacity(0.2) : Color.clear)
-                    .cornerRadius(6)
-                #else
-                    .foregroundColor(Color("TextColor"))
-                #endif
+            Group {
+                if let systemName = systemName {
+                    Image(systemName: systemName)
+                } else if let asset = assetName {
+                    Image(asset)
+                }
+            }
+            #if targetEnvironment(macCatalyst)
+                .foregroundColor(isEnabled ? Color("MacIconColor") : Color("MacIconColor").opacity(0.5))
+                .fontWeight(.bold)
+                .padding(.vertical, 4)
+                .padding(.horizontal, 8)
+                .background(isHovering ? Color.gray.opacity(0.2) : Color.clear)
+                .cornerRadius(6)
+            #else
+                .foregroundColor(isEnabled ? foregroundColor : Color("TextColor").opacity(0.25))
+            #endif
         }
         .buttonStyle(.plain)
         .background(Color.clear)
