@@ -18,7 +18,6 @@ func deviceHasEnoughRam() -> Bool {
 
 // Device support check function
 func isDeviceSupported() -> Bool {
-    return false
     #if targetEnvironment(simulator)
     return true
     #elseif targetEnvironment(macCatalyst)
