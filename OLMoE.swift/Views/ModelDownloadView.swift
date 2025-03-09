@@ -216,7 +216,7 @@ struct ModelDownloadView: View {
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(.all)
 
-            VStack(spacing: 50) {
+            VStack(spacing: 40) {
                 if downloadManager.isModelReady {
                     Text("Model is ready to use!")
                         .foregroundColor(Color("TextColor"))
@@ -244,16 +244,17 @@ struct ModelDownloadView: View {
                     }
                 } else {
                     Text("Welcome")
-                        .font(.telegraf(size: 48))
+                        .font(.telegraf(.medium, size: 40))
 
                     Text("Download Model Message")
                         .multilineTextAlignment(.center)
-                        .font(.body())
+                        .font(.body(.regular))
                         .padding([.bottom], 4)
 
-                    Button("Download Model") {
-                        showDownloadConfirmation = true
+                    Button(action: { showDownloadConfirmation = true }) {
+                        Image("DownloadIcon")
                     }
+                    .buttonStyle(.borderless)
                     .buttonStyle(.PrimaryButton)
                     .sheet(isPresented: $showDownloadConfirmation) {
                         SheetWrapper {

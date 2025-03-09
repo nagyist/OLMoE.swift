@@ -9,11 +9,11 @@
 import SwiftUI
 
 extension Font {
-    static func title(_ weight: Font.Weight = .medium) -> Font {
+    static func title(_ weight: Font.Weight = .regular) -> Font {
         .telegraf(weight, size: 24)
     }
 
-    static func body(_ weight: Font.Weight = .medium) -> Font {
+    static func body(_ weight: Font.Weight = .regular) -> Font {
         .manrope(weight, size: 17)
     }
 
