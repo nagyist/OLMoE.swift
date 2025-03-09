@@ -348,6 +348,7 @@ struct BotView: View {
                         maxWidth: geometry.size.width,
                         hideCopyButton: true
                     )
+                    .padding(.bottom, 15)
                 }
 
                 MessageInputView(
