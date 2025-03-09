@@ -31,7 +31,7 @@ struct UnsupportedDeviceView: View {
 
                     Text("Device not supported")
                         .id(UUID())
-                        .font(.title(.bold))
+                        .font(.title(.medium))
                         .background(GeometryReader { geometry in
                             Color.clear.onAppear {
                                 notSupportedWidth = geometry.size.width + 24
@@ -42,7 +42,7 @@ struct UnsupportedDeviceView: View {
                     VStack() {
                         Text("This app needs 8GB of RAM.")
                             .multilineTextAlignment(.center)
-                            .font(.body(.heavy))
+                            .font(.body(.bold))
                         if availableMemoryInGB > 0 {
                             Text("This device has \(formattedMemory)GB available.")
                                 .multilineTextAlignment(.center)
