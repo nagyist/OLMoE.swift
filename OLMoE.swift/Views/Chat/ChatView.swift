@@ -27,22 +27,6 @@ public struct UserChatBubble: View {
     }
 }
 
-public struct TypingIndicator: View {
-    @State private var dotCount = 0
-
-    public var body: some View {
-        HStack() {
-            Text(String(repeating: ".", count: dotCount))
-        }
-        .onAppear {
-            // Animate dots
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.dotCount = (self.dotCount + 1) % 4 // Cycle through 0-3 dots
-            }
-        }
-    }
-}
-
 struct ScrollState {
     static let BottomScrollThreshold = 40.0
     static let ScrollSpaceName: String = "scrollSpace"
