@@ -16,7 +16,7 @@ public struct MetricsButton: View {
     let isShowing: Bool
 
     public var body: some View {
-        ToolbarButton(action: action, imageName: isShowing ? "chart.bar.fill" : "chart.bar")
+        ToolbarButton(action: action, systemName: isShowing ? "chart.bar.fill" : "chart.bar")
         #if targetEnvironment(macCatalyst)
             .padding(.trailing, 12)
             .padding(.top, 4)

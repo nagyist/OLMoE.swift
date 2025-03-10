@@ -21,15 +21,15 @@ public struct BotChatBubble: View {
     @State private var showCopyFeedback = false
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 6) {
+        HStack(alignment: .top, spacing: 18) {
             // Bot profile picture
             Image("BotProfilePicture")
                 .resizable()
-                .frame(width: 20, height: 20)
-                .padding(4)
-                .background(Color("Surface"))
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
+                .padding(5)
+                .background(Color("AccentColor"))
                 .clipShape(Circle())
-                .padding(.trailing, 12)
 
             if isGenerating && text.isEmpty {
                 TypingIndicator()
@@ -39,7 +39,7 @@ public struct BotChatBubble: View {
                     Markdown(text)
                         .padding(.top, -2)
                         .background(Color("BackgroundColor"))
-                        .frame(maxWidth: maxWidth * 0.75, alignment: .leading)
+                        .frame(alignment: .leading)
                         .font(.body())
                         // Style for inline code
                         .markdownTextStyle(\.code) {
@@ -150,7 +150,7 @@ public struct BotChatBubble: View {
                 hideCopyButton: true
             )
         }
-        .padding()
+        .padding(.vertical, 20)
         .background(Color("BackgroundColor"))
         .preferredColorScheme(.dark)
     }

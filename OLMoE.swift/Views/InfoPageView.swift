@@ -12,11 +12,7 @@ struct InfoButton: View {
     let action: () -> Void
 
     var body: some View {
-        ToolbarButton(action: action, imageName: "info.circle")
-        #if targetEnvironment(macCatalyst)
-            .padding(.trailing, 12)
-            .padding(.top, 4)
-        #endif
+        ToolbarButton(action: action, assetName: "InfoIcon", foregroundColor: Color("AccentColor"))
     }
 }
 
