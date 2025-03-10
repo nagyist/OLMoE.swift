@@ -245,14 +245,14 @@ struct BotView: View {
     }
 
     @ViewBuilder
-    func trashButton() -> some View {
+    func newChatButton() -> some View {
         ToolbarButton(action: {
             isTextEditorFocused = false
             isDeleteHistoryConfirmationVisible = true
             stop()
         }, assetName: "NewChatIcon", foregroundColor: Color("LightGreen"))
-            .alert("Delete history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
-                Button("Delete", action: deleteHistory)
+            .alert("Clear chat history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
+                Button("Clear", action: deleteHistory)
                 Button("Cancel", role: .cancel) {
                     isDeleteHistoryConfirmationVisible = false
                 }
@@ -361,7 +361,7 @@ struct BotView: View {
                 #endif
                 HStack(alignment: .bottom, spacing: spacing) {
                     shareButton()
-                    trashButton()
+                    newChatButton()
                 }
             }
         }
