@@ -17,9 +17,10 @@ public struct UserChatBubble: View {
         HStack(alignment: .top) {
             Spacer()
             Text(text.trimmingCharacters(in: .whitespacesAndNewlines))
-                .padding(12)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 20)
                 .background(Color("Surface"))
-                .cornerRadius(12)
+                .cornerRadius(24)
                 .frame(maxWidth: maxWidth * 0.75, alignment: .trailing)
                 .font(.body())
                 .textSelection(.enabled)
