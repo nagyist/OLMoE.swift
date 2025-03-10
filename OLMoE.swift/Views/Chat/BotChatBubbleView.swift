@@ -62,6 +62,28 @@ public struct BotChatBubble: View {
                             FontSize(.em(0.85))
                             BackgroundColor(Color("Surface").opacity(0.35))
                         }
+                        // Style for lists
+                        .markdownNumberedListMarker(
+                            BlockStyle { configuration in
+                              Text("\(configuration.itemNumber)")
+                                .monospacedDigit()
+                                .foregroundColor(Color("AccentColor"))
+                                .fontWeight(.semibold)
+                                .padding(.trailing, 5)
+                            }
+                        )
+                        .markdownBulletedListMarker(
+                            BlockStyle { configuration in
+                                let systemNames = ["circle.fill", "circle", "square.fill"]
+                                let index = (configuration.listLevel - 1) % systemNames.count
+                                let systemName = systemNames[index]
+
+                                Image(systemName: systemName)
+                                    .foregroundColor(Color("AccentColor"))
+                                    .font(.system(size: 6))
+                                    .padding(.trailing, 8)
+                            }
+                        )
                         // Style for code blocks with copy functionality
                         .markdownBlockStyle(\.codeBlock) { configuration in
                             configuration.label
@@ -156,6 +178,26 @@ public struct BotChatBubble: View {
 
             BotChatBubble(
                 text: "This is a longer message that spans multiple lines to demonstrate how the bubble handles longer content and wraps text appropriately.",
+                maxWidth: UIScreen.main.bounds.width
+            )
+
+            BotChatBubble(
+                text: """
+                ### Lists
+
+                1. Install dependencies
+                   1. Run `npm install` for frontend packages
+                2. Configure environment
+                3. Start development server
+
+                - Frontend
+                  - Redux state management
+                    - Reducers
+                      - Data reducer
+                        - Backend
+                            - API endpoints
+
+                """,
                 maxWidth: UIScreen.main.bounds.width
             )
 
