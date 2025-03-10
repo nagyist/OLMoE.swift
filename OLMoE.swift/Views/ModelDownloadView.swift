@@ -196,11 +196,7 @@ struct Ai2Logo: View {
             Image("Ai2 Logo")
                 .resizable()
                 .scaledToFit()
-                .frame(height: 18)
-
-            Text("allenai.org")
-                .font(.manrope(size: 14))
-                .foregroundColor(Color("TextColor"))
+                .frame(height: 21)
         }
         .padding(.horizontal, 0)
         .padding(.vertical, 0)
@@ -220,7 +216,7 @@ struct ModelDownloadView: View {
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(.all)
 
-            VStack {
+            VStack(spacing: 40) {
                 if downloadManager.isModelReady {
                     Text("Model is ready to use!")
                         .foregroundColor(Color("TextColor"))
@@ -248,19 +244,17 @@ struct ModelDownloadView: View {
                     }
                 } else {
                     Text("Welcome")
-                        .font(.telegraf(size: 48))
+                        .font(.telegraf(.medium, size: 40))
 
                     Text("Download Model Message")
                         .multilineTextAlignment(.center)
-                        .font(.body())
+                        .font(.body(.regular))
                         .padding([.bottom], 4)
 
-                    Spacer()
-                        .frame(height: 16)
-
-                    Button("Download Model") {
-                        showDownloadConfirmation = true
+                    Button(action: { showDownloadConfirmation = true }) {
+                        Image("DownloadIcon")
                     }
+                    .buttonStyle(.borderless)
                     .buttonStyle(.PrimaryButton)
                     .sheet(isPresented: $showDownloadConfirmation) {
                         SheetWrapper {
@@ -316,15 +310,6 @@ struct ModelDownloadView: View {
             }
         }
     }
-}
-
-#Preview("Ai2Logo") {
-    VStack {
-        Ai2Logo()
-    }
-    .preferredColorScheme(.dark)
-    .padding()
-    .background(Color("BackgroundColor"))
 }
 
 #Preview("ModelDownloadView") {

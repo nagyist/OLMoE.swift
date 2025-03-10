@@ -19,7 +19,7 @@ struct MessageInputView: View {
     let stop: () -> Void
 
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 15) {
             TextField(
                 UIDevice.current.userInterfaceIdiom == .mac ?
                     String(localized: "Message OLMoE (Press Return to send)") :
@@ -40,7 +40,7 @@ struct MessageInputView: View {
                 }
                 .disabled(isInputDisabled)
                 .opacity(isInputDisabled ? 0.6 : 1)
-                .padding(12)
+                .padding(.vertical, 17.5)
                 .onSubmit {
                     #if targetEnvironment(macCatalyst)
                     if hasValidInput {
@@ -56,6 +56,8 @@ struct MessageInputView: View {
                         Image("StopIcon")
                     }
                     .buttonStyle(.plain)
+                    .padding(.top, 12)
+                    .padding(.trailing, -12)
                 } else {
                     Button(action: respond) {
                         Image("SendIcon")
@@ -63,21 +65,19 @@ struct MessageInputView: View {
                     .buttonStyle(.plain)
                     .disabled(!hasValidInput)
                     .opacity(hasValidInput ? 1 : 0.5)
+                    .foregroundColor(hasValidInput ? Color("LightGreen") : Color("TextColor").opacity(0.5))
                     .keyboardShortcut(.defaultAction)
+                    .padding(.top, 20)
                 }
             }
             .onTapGesture {
                 isTextEditorFocused = false
             }
             .font(.system(size: 24))
-            .frame(width: 40, height: 40)
-            .padding(.top, 4)
-            .padding(.trailing, 4)
-
         }
-        .padding([.leading, .trailing], 8)
+        .padding([.leading, .trailing], 23)
         .frame(maxWidth: .infinity)
-        .frame(minHeight: UIDevice.current.userInterfaceIdiom == .pad ? 80 : 40)
+        .frame(minHeight: UIDevice.current.userInterfaceIdiom == .pad ? 80 : 57.5)
         .background(
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color("Surface"))
@@ -86,16 +86,77 @@ struct MessageInputView: View {
     }
 }
 
-#Preview {
+#Preview("Valid Input") {
     @FocusState var isTextEditorFocused: Bool
 
     MessageInputView(
-        input: .constant("Message"),
+        input: .constant("Valid Message"),
         isGenerating: .constant(false),
         stopSubmitted: .constant(false),
         isTextEditorFocused: $isTextEditorFocused,
         isInputDisabled: false,
         hasValidInput: true,
+        respond: {
+            print("Send")
+        },
+        stop: {
+            print("Stop")
+        }
+    )
+    .preferredColorScheme(.dark)
+}
+
+#Preview("Long Input") {
+    @FocusState var isTextEditorFocused: Bool
+
+    MessageInputView(
+        input: .constant("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
+        isGenerating: .constant(false),
+        stopSubmitted: .constant(false),
+        isTextEditorFocused: $isTextEditorFocused,
+        isInputDisabled: false,
+        hasValidInput: true,
+        respond: {
+            print("Send")
+        },
+        stop: {
+            print("Stop")
+        }
+    )
+    .preferredColorScheme(.dark)
+}
+
+
+#Preview("Generating") {
+    @FocusState var isTextEditorFocused: Bool
+
+    MessageInputView(
+        input: .constant(""),
+        isGenerating: .constant(true),
+        stopSubmitted: .constant(false),
+        isTextEditorFocused: $isTextEditorFocused,
+        isInputDisabled: false,
+        hasValidInput: true,
+        respond: {
+            print("Send")
+        },
+        stop: {
+            print("Stop")
+        }
+    )
+    .preferredColorScheme(.dark)
+}
+
+#Preview("Empty Input") {
+    @FocusState var isTextEditorFocused: Bool
+
+    MessageInputView(
+        input: .constant(""),
+        isGenerating: .constant(false),
+        stopSubmitted: .constant(false),
+        isTextEditorFocused: $isTextEditorFocused,
+        isInputDisabled: false,
+        hasValidInput: false,
         respond: {
             print("Send")
         },

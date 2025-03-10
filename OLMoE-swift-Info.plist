@@ -17,7 +17,14 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>Manrope-VariableFont_wght.ttf</string>
-		<string>pp-telegraf.ttf</string>
+		<string>PPTelegrafCustom-Black.ttf</string>
+		<string>PPTelegrafCustom-Bold.ttf</string>
+		<string>PPTelegrafCustom-Light.ttf</string>
+		<string>PPTelegrafCustom-Medium.ttf</string>
+		<string>PPTelegrafCustom-Regular.ttf</string>
+		<string>PPTelegrafCustom-Semibold.ttf</string>
+		<string>PPTelegrafCustom-Ultrabold.ttf</string>
+		<string>PPTelegrafCustom-Ultralight.ttf</string>
 	</array>
 </dict>
 </plist>
