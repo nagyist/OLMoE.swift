@@ -20,6 +20,14 @@ public struct BotChatBubble: View {
     // State for tracking copy feedback
     @State private var showCopyFeedback = false
 
+    var generatingDot: String {
+        if isGenerating && !text.isEmpty {
+            return " [•](GeneratingDot)"
+        } else {
+            return ""
+        }
+    }
+
     public var body: some View {
         HStack(alignment: .top, spacing: 18) {
             // Bot profile picture
@@ -36,11 +44,18 @@ public struct BotChatBubble: View {
             } else {
                 VStack(alignment: .leading) {
                     // Markdown content with styling
-                    Markdown(text)
+                    Markdown("""
+                        \(text)\(generatingDot)
+                        """
+                    )
                         .padding(.top, -2)
                         .background(Color("BackgroundColor"))
                         .frame(alignment: .leading)
                         .font(.body())
+                        // Style for links
+                        .markdownTextStyle(\.link) {
+                            ForegroundColor(Color("AccentColor"))
+                        }
                         // Style for inline code
                         .markdownTextStyle(\.code) {
                             FontFamilyVariant(.monospaced)
@@ -134,7 +149,7 @@ public struct BotChatBubble: View {
             )
 
             BotChatBubble(
-                text: "This text is being gener…",
+                text: "This text is being generated and may span multiple lin",
                 maxWidth: UIScreen.main.bounds.width,
                 isGenerating: true
             )
