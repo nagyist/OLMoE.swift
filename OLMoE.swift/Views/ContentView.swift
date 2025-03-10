@@ -260,33 +260,6 @@ struct BotView: View {
             .disabled(isDeleteButtonDisabled)
     }
 
-    @ViewBuilder
-    func scrollToBottomButton() -> some View {
-        VStack {
-            Spacer()
-
-            Button(action: {
-                scrollToBottom = true
-            }) {
-                Image(systemName: "arrow.down")
-                    .aspectRatio(contentMode: .fit)
-                    .padding(10)
-                    .foregroundColor(Color("BackgroundColor"))
-                    .background(Color("LightGreen"))
-                    .clipShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .opacity(shouldShowScrollButton() ? 1 : 0)
-            .transition(.opacity)
-            .animation(
-                shouldShowScrollButton()
-                ? .easeIn(duration: 0.1)
-                : .easeOut(duration: 0.3).delay(0.1),
-                value: shouldShowScrollButton())
-        }
-        .padding([.bottom], 4)
-    }
-
     var body: some View {
         GeometryReader { geometry in
             contentView(in: geometry)
@@ -323,7 +296,10 @@ struct BotView: View {
                                     isTextEditorFocused = false
                                 }))
 
-                            scrollToBottomButton()
+                            ScrollToBottomButtonView(
+                                scrollToBottom: $scrollToBottom,
+                                shouldShowScrollButton: shouldShowScrollButton
+                            )
                         }
                     }
                 } else {
