@@ -17,7 +17,7 @@ struct SheetWrapper<Content: View>: View {
 
     var body: some View {
         ZStack {
-            Color("Surface") // Set the background color for the entire sheet
+            Color("SheetsBackgroundColor") // Use the new color set specifically for sheets
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 content
