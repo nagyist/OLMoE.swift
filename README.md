@@ -21,7 +21,7 @@
 2. **Download the model** – The app may prompt you to download the required model files. Just follow the instructions and wait for the download to complete.
 3. **Ask questions** – Once the model is ready, type in your question, and the app will generate a response.
 
-We **don’t** store any of your queries or data—everything runs on your device. You can even use the app in **Flight Mode** with no internet connection.
+We **don't** store any of your queries or data—everything runs on your device. You can even use the app in **Flight Mode** with no internet connection.
 
 Enjoy a fully open, private, and offline capable AI experience with OLMoE.
 
@@ -66,7 +66,7 @@ inputs = tokenizer("Bitcoin is", return_tensors="pt")
 inputs = {k: v.to(DEVICE) for k, v in inputs.items()}
 out = model.generate(**inputs, max_length=64)
 print(tokenizer.decode(out[0]))
-# > # Bitcoin is a digital currency that is created and held electronically. No one controls it. Bitcoins aren’t printed, like dollars or euros – they’re produced by people and businesses running computers all around the world, using software that solves mathematical
+# > # Bitcoin is a digital currency that is created and held electronically. No one controls it. Bitcoins aren't printed, like dollars or euros – they're produced by people and businesses running computers all around the world, using software that solves mathematical
 ```
 
 ## aws-lambda
@@ -98,5 +98,11 @@ This project relies on the following open-source libraries, each licensed under 
 - **Author(s):** Guillermo Gonzalez (2020)
 - **License:** MIT
 - **Repository:** [MarkdownUI](https://github.com/gonzalezreal/swift-markdown-ui)
+
+### [HighlightSwift](https://github.com/appstefan/HighlightSwift)
+
+- **Author(s):** Stefan Blos
+- **License:** MIT
+- **Repository:** [HighlightSwift](https://github.com/appstefan/HighlightSwift)
 
 For more details on each license, visit the respective repositories linked above.

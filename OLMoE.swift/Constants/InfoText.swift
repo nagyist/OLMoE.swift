@@ -11,7 +11,7 @@ enum InfoText {
         HeaderTextPair(
             header: "What is the OLMoE App?",
             text: """
-                This application allows you to interact with Ai2’s OLMoE model, a Mixture-of-Experts language model that can run completely on-device.
+                This application allows you to interact with Ai2's OLMoE model, a Mixture-of-Experts language model that can run completely on-device.
                 """),
         HeaderTextPair(
             header: "What type of data is used to train the models?",
@@ -64,6 +64,12 @@ enum InfoText {
                 Licensed under the MIT License.
                 You may obtain a copy of the license at:
                 [MarkdownUI Repository](https://github.com/gonzalezreal/swift-markdown-ui)
+
+                HighlightSwift
+                Copyright (c) Stefan Blos
+                Licensed under the MIT License.
+                You may obtain a copy of the license at:
+                [HighlightSwift Repository](https://github.com/appstefan/HighlightSwift)
                 """)
     ]
 }
