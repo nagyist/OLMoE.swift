@@ -57,8 +57,7 @@ struct InfoView: View {
 
                 CloseButton(action: { isPresented = false })
             }
-            .padding(.top, 24)
-            .padding(.bottom, 8)
+            .padding(EdgeInsets(top: 24, leading: 12, bottom: 12, trailing: 12))
 
             // Scrollable content
             ScrollView {
