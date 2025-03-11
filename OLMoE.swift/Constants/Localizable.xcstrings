@@ -20,6 +20,9 @@
     "%d total" : {
 
     },
+    "%lld" : {
+
+    },
     "%lld%%" : {
 
     },
@@ -29,16 +32,16 @@
     "Cancel" : {
 
     },
+    "Clear" : {
+
+    },
+    "Clear chat history?" : {
+
+    },
     "Copied" : {
 
     },
     "Copy Code" : {
-
-    },
-    "Delete" : {
-
-    },
-    "Delete history?" : {
 
     },
     "Device not supported" : {

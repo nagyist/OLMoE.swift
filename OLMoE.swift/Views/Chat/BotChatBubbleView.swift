@@ -20,6 +20,14 @@ public struct BotChatBubble: View {
     // State for tracking copy feedback
     @State private var showCopyFeedback = false
 
+    var generatingDot: String {
+        if isGenerating && !text.isEmpty {
+            return " [•](GeneratingDot)"
+        } else {
+            return ""
+        }
+    }
+
     public var body: some View {
         HStack(alignment: .top, spacing: 18) {
             // Bot profile picture
@@ -36,17 +44,46 @@ public struct BotChatBubble: View {
             } else {
                 VStack(alignment: .leading) {
                     // Markdown content with styling
-                    Markdown(text)
+                    Markdown("""
+                        \(text)\(generatingDot)
+                        """
+                    )
                         .padding(.top, -2)
                         .background(Color("BackgroundColor"))
                         .frame(alignment: .leading)
                         .font(.body())
+                        // Style for links
+                        .markdownTextStyle(\.link) {
+                            ForegroundColor(Color("AccentColor"))
+                        }
                         // Style for inline code
                         .markdownTextStyle(\.code) {
                             FontFamilyVariant(.monospaced)
                             FontSize(.em(0.85))
                             BackgroundColor(Color("Surface").opacity(0.35))
                         }
+                        // Style for lists
+                        .markdownNumberedListMarker(
+                            BlockStyle { configuration in
+                              Text("\(configuration.itemNumber)")
+                                .monospacedDigit()
+                                .foregroundColor(Color("AccentColor"))
+                                .fontWeight(.semibold)
+                                .padding(.trailing, 5)
+                            }
+                        )
+                        .markdownBulletedListMarker(
+                            BlockStyle { configuration in
+                                let systemNames = ["circle.fill", "circle", "square.fill"]
+                                let index = (configuration.listLevel - 1) % systemNames.count
+                                let systemName = systemNames[index]
+
+                                Image(systemName: systemName)
+                                    .foregroundColor(Color("AccentColor"))
+                                    .font(.system(size: 6))
+                                    .padding(.trailing, 8)
+                            }
+                        )
                         // Style for code blocks with copy functionality
                         .markdownBlockStyle(\.codeBlock) { configuration in
                             configuration.label
@@ -134,13 +171,33 @@ public struct BotChatBubble: View {
             )
 
             BotChatBubble(
-                text: "This text is being gener…",
+                text: "This text is being generated and may span multiple lin",
                 maxWidth: UIScreen.main.bounds.width,
                 isGenerating: true
             )
 
             BotChatBubble(
                 text: "This is a longer message that spans multiple lines to demonstrate how the bubble handles longer content and wraps text appropriately.",
+                maxWidth: UIScreen.main.bounds.width
+            )
+
+            BotChatBubble(
+                text: """
+                ### Lists
+
+                1. Install dependencies
+                   1. Run `npm install` for frontend packages
+                2. Configure environment
+                3. Start development server
+
+                - Frontend
+                  - Redux state management
+                    - Reducers
+                      - Data reducer
+                        - Backend
+                            - API endpoints
+
+                """,
                 maxWidth: UIScreen.main.bounds.width
             )
 

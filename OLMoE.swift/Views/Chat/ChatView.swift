@@ -17,28 +17,13 @@ public struct UserChatBubble: View {
         HStack(alignment: .top) {
             Spacer()
             Text(text.trimmingCharacters(in: .whitespacesAndNewlines))
-                .padding(12)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 20)
                 .background(Color("Surface"))
-                .cornerRadius(12)
+                .cornerRadius(24)
                 .frame(maxWidth: maxWidth * 0.75, alignment: .trailing)
                 .font(.body())
                 .textSelection(.enabled)
-        }
-    }
-}
-
-public struct TypingIndicator: View {
-    @State private var dotCount = 0
-
-    public var body: some View {
-        HStack() {
-            Text(String(repeating: ".", count: dotCount))
-        }
-        .onAppear {
-            // Animate dots
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.dotCount = (self.dotCount + 1) % 4 // Cycle through 0-3 dots
-            }
         }
     }
 }
