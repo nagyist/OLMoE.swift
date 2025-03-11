@@ -21,13 +21,13 @@ struct CloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "xmark.circle")
-                .font(.system(size: 20))
-                .frame(width: 40, height: 40)
-                .foregroundColor(Color("TextColor"))
+            Image("CloseButtonIcon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 15, height: 15)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 12))
         }
         .buttonStyle(.plain)
-        .clipShape(Circle())
     }
 }
 
@@ -36,7 +36,7 @@ struct InfoContent: View {
         VStack(alignment: .leading, spacing: 20) {
             ForEach(InfoText.content) { text in
                 HeaderTextPairView(header: text.header, text: text.text)
-                    .padding([.horizontal], 12)
+                    .padding([.horizontal], 24)
             }
         }
         .padding([.bottom], 24)
@@ -49,12 +49,15 @@ struct InfoView: View {
     var body: some View {
         #if targetEnvironment(macCatalyst)
         VStack(spacing: 0) {
-            // Fixed header
+            // Fixed header with logo and close button
             HStack {
+                Ai2LogoView(height: 30, leadingPadding: 12)
+
                 Spacer()
+
                 CloseButton(action: { isPresented = false })
             }
-            .padding([.top, .horizontal], 12)
+            .padding(EdgeInsets(top: 24, leading: 12, bottom: 12, trailing: 12))
 
             // Scrollable content
             ScrollView {
@@ -64,10 +67,15 @@ struct InfoView: View {
         #else
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // Header with logo and close button
                 HStack {
+                    Ai2LogoView(height: 30, leadingPadding: 12)
+
                     Spacer()
+
                     CloseButton(action: { isPresented = false })
                 }
+                .padding(EdgeInsets(top: 24, leading: 12, bottom: 8, trailing: 12))
 
                 InfoContent()
             }
