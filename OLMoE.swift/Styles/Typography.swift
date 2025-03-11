@@ -18,6 +18,6 @@ extension Font {
     }
 
     static func subheader() -> Font {
-        .manrope(.medium, size: 22)
+        .manrope(.bold, size: 17)
     }
 }
