@@ -8,6 +8,10 @@
 import SwiftUI
 import MarkdownUI
 
+struct ChatConstants {
+    static let generatingDotMarker = "[•](GeneratingDot)"
+}
+
 public struct BotChatBubble: View {
     var text: String
     var maxWidth: CGFloat
@@ -17,14 +21,12 @@ public struct BotChatBubble: View {
     private var copyButtonIsVisible: Bool {
         !hideCopyButton && !isGenerating && text != "..."
     }
-    // State for tracking copy feedback
-    @State private var showCopyFeedback = false
 
-    var generatingDot: String {
+    private var textWithGeneratingIndicator: String {
         if isGenerating && !text.isEmpty {
-            return " [•](GeneratingDot)"
+            return text + ChatConstants.generatingDotMarker
         } else {
-            return ""
+            return text
         }
     }
 
@@ -44,10 +46,7 @@ public struct BotChatBubble: View {
             } else {
                 VStack(alignment: .leading) {
                     // Markdown content with styling
-                    Markdown("""
-                        \(text)\(generatingDot)
-                        """
-                    )
+                    Markdown(textWithGeneratingIndicator)
                         .padding(.top, -2)
                         .background(Color("BackgroundColor"))
                         .frame(alignment: .leading)
@@ -84,21 +83,19 @@ public struct BotChatBubble: View {
                                     .padding(.trailing, 8)
                             }
                         )
-                        // Style for code blocks with copy functionality
+                        // Style for code blocks
                         .markdownBlockStyle(\.codeBlock) { configuration in
-                            configuration.label
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color("Surface").opacity(0.35))
-                                .markdownTextStyle {
-                                    FontFamilyVariant(.monospaced)
-                                    FontSize(.em(0.85))
-                                }
+                            // For code blocks, we use the original content without the generating dot
+                            let cleanCode = configuration.content.replacingOccurrences(
+                                of: ChatConstants.generatingDotMarker,
+                                with: ""
+                            )
+
+                            return HighlightedCodeBlock(code: cleanCode, language: configuration.language)
                                 .markdownMargin(top: 8, bottom: 8)
                                 .contextMenu {
                                     Button(action: {
-                                        UIPasteboard.general.string = configuration.content
+                                        UIPasteboard.general.string = cleanCode
                                         let generator = UIImpactFeedbackGenerator(style: .light)
                                         generator.impactOccurred()
                                     }) {
@@ -108,24 +105,16 @@ public struct BotChatBubble: View {
                         }
                         .textSelection(.enabled) // Enable text selection for manual copying
 
-                    // Copy button
+                    // Copy button for full text
                     if copyButtonIsVisible {
-                        Button(action: {
-                            copyFullText()
-                        }) {
-                            HStack(spacing: 4) {
-                                Image(systemName: showCopyFeedback ? "checkmark" : "doc.on.doc")
-                                    .font(.body())
-                                if showCopyFeedback {
-                                    Text("Copied")
-                                        .font(.body())
-                                }
-                            }
-                            .padding(.top, 1)
-                            .background(Color.clear)
-                            .foregroundColor(Color("AccentColor"))
-                        }
-                        .buttonStyle(PlainButtonStyle())
+                        CopyButton(
+                            textToCopy: text,
+                            foregroundColor: Color("AccentColor"),
+                            showLabel: true,
+                            fontSize: .body(),
+                            helpText: "Copy message"
+                        )
+                        .padding(.top, 1)
                     }
                 }
             }
@@ -133,29 +122,9 @@ public struct BotChatBubble: View {
         }
         .padding([.leading], 12)
     }
-
-    // Copy the full text to clipboard with feedback
-    private func copyFullText() {
-        UIPasteboard.general.string = text
-
-        // Show feedback
-        withAnimation {
-            showCopyFeedback = true
-        }
-
-        // Provide haptic feedback
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-
-        // Hide feedback after delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation {
-                showCopyFeedback = false
-            }
-        }
-    }
 }
 
+// MARK: - Previews
 #Preview {
     ScrollView {
         VStack(spacing: 20) {
@@ -177,12 +146,33 @@ public struct BotChatBubble: View {
             )
 
             BotChatBubble(
-                text: "This is a longer message that spans multiple lines to demonstrate how the bubble handles longer content and wraps text appropriately.",
-                maxWidth: UIScreen.main.bounds.width
-            )
-
-            BotChatBubble(
                 text: """
+                ### Code
+                ```python
+                print("Hello World")
+                ```
+
+                ```swift
+                struct Example {
+                    let value: String
+                    func process() -> String {
+                        return "Processed: \\(value)"
+                    }
+                }
+                ```
+
+                ```
+                let numbers = [1, 2, 3, 4, 5]
+                let order = numbers.sort((a, b) => {
+                    return a;
+                })
+                console.log(order);
+                ```
+
+                ```
+                Plain text, this is not a valid programming language
+                ```
+
                 ### Lists
 
                 1. Install dependencies
