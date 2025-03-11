@@ -245,46 +245,19 @@ struct BotView: View {
     }
 
     @ViewBuilder
-    func trashButton() -> some View {
+    func newChatButton() -> some View {
         ToolbarButton(action: {
             isTextEditorFocused = false
             isDeleteHistoryConfirmationVisible = true
             stop()
         }, assetName: "NewChatIcon", foregroundColor: Color("LightGreen"))
-            .alert("Delete history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
-                Button("Delete", action: deleteHistory)
+            .alert("Clear chat history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
+                Button("Clear", action: deleteHistory)
                 Button("Cancel", role: .cancel) {
                     isDeleteHistoryConfirmationVisible = false
                 }
             })
             .disabled(isDeleteButtonDisabled)
-    }
-
-    @ViewBuilder
-    func scrollToBottomButton() -> some View {
-        VStack {
-            Spacer()
-
-            Button(action: {
-                scrollToBottom = true
-            }) {
-                Image(systemName: "arrow.down")
-                    .aspectRatio(contentMode: .fit)
-                    .padding(10)
-                    .foregroundColor(Color("BackgroundColor"))
-                    .background(Color("LightGreen"))
-                    .clipShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .opacity(shouldShowScrollButton() ? 1 : 0)
-            .transition(.opacity)
-            .animation(
-                shouldShowScrollButton()
-                ? .easeIn(duration: 0.1)
-                : .easeOut(duration: 0.3).delay(0.1),
-                value: shouldShowScrollButton())
-        }
-        .padding([.bottom], 4)
     }
 
     var body: some View {
@@ -323,7 +296,10 @@ struct BotView: View {
                                     isTextEditorFocused = false
                                 }))
 
-                            scrollToBottomButton()
+                            ScrollToBottomButtonView(
+                                scrollToBottom: $scrollToBottom,
+                                shouldShowScrollButton: shouldShowScrollButton
+                            )
                         }
                     }
                 } else {
@@ -385,7 +361,7 @@ struct BotView: View {
                 #endif
                 HStack(alignment: .bottom, spacing: spacing) {
                     shareButton()
-                    trashButton()
+                    newChatButton()
                 }
             }
         }

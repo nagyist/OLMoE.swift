@@ -83,6 +83,13 @@ struct MessageInputView: View {
                 .fill(Color("Surface"))
                 .foregroundStyle(.thinMaterial)
         )
+        // Border outline when focused
+        .overlay(
+            RoundedRectangle(cornerRadius: 30)
+                .stroke(Color("LightGreen"), lineWidth: 1)
+                .opacity(isTextEditorFocused ? 1 : 0)
+                .animation(.easeInOut(duration: 0.3), value: isTextEditorFocused)
+        )
     }
 }
 
@@ -104,6 +111,7 @@ struct MessageInputView: View {
         }
     )
     .preferredColorScheme(.dark)
+    .padding()
 }
 
 #Preview("Long Input") {
@@ -124,8 +132,8 @@ struct MessageInputView: View {
         }
     )
     .preferredColorScheme(.dark)
+    .padding()
 }
-
 
 #Preview("Generating") {
     @FocusState var isTextEditorFocused: Bool
