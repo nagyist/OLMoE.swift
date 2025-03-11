@@ -189,23 +189,6 @@ class BackgroundDownloadManager: NSObject, ObservableObject, URLSessionDownloadD
     }
 }
 
-
-struct Ai2Logo: View {
-    var body: some View {
-        HStack {
-            Image("Ai2 Logo")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 21)
-        }
-        .padding(.horizontal, 0)
-        .padding(.vertical, 0)
-        #if targetEnvironment(macCatalyst)
-        .padding(.bottom, 20)
-        #endif
-    }
-}
-
 /// A view that displays the model download progress and status.
 struct ModelDownloadView: View {
     @StateObject private var downloadManager = BackgroundDownloadManager.shared
@@ -298,7 +281,7 @@ struct ModelDownloadView: View {
             }
             .padding()
 
-            Ai2Logo()
+            Ai2LogoView(applyMacCatalystPadding: true)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
         .onAppear {
