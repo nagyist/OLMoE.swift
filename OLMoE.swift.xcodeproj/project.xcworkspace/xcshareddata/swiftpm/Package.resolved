@@ -1,6 +1,15 @@
 {
-  "originHash" : "9fc5d8266c0b4820e5e9a3d82025e85b35f5476d810ce5eabdc737887aeadcdd",
+  "originHash" : "5d8fca4b8d9382d8493e5796120f9a305be43e78ddd8c00d20ec219872db9a1b",
   "pins" : [
+    {
+      "identity" : "highlightswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/appstefan/HighlightSwift",
+      "state" : {
+        "revision" : "784ca3ccfc8a2cf724fbb2f06cb6ec3329424da3",
+        "version" : "1.1.0"
+      }
+    },
     {
       "identity" : "llama.cpp",
       "kind" : "remoteSourceControl",

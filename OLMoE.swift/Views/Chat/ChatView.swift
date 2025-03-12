@@ -332,43 +332,7 @@ public struct ChatView: View {
         ## Links and References
         [External Link](https://example.com)
         <https://auto-link.com>
-
-        Reference-style [link][ref] and footnotes[^1]
-
-        [^1]: This is a footnote
-        [ref]: https://example.com
         """),
-
-        Chat(role: .user, content: "Any special features?"),
-        Chat(role: .bot, content: """
-        ## Special Elements
-        <details>
-        <summary>Expandable Section</summary>
-
-        * Hidden content
-        * More items
-        </details>
-
-        ## Math and Diagrams
-        Math: $E = mc^2$
-
-        ```mermaid
-        graph TD;
-            A-->B;
-            B-->C;
-            C-->D;
-        ```
-
-        ## Definition Lists
-        Term 1
-        : First definition
-        : Another definition
-
-        Term 2
-        : With nested list
-          * Item 1
-          * Item 2
-        """)
     ]
 
     ChatView(
