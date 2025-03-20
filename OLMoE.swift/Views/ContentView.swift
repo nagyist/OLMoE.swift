@@ -46,6 +46,7 @@ struct BotView: View {
     @State private var isDeleteHistoryConfirmationVisible = false
     @State private var isScrolledToBottom = true
     @FocusState private var isTextEditorFocused: Bool
+    @Binding var showMetrics: Bool
     let disclaimerHandlers: DisclaimerHandlers
 
     // Add new state for text sharing
@@ -67,8 +68,9 @@ struct BotView: View {
         bot.history.isEmpty && !isGenerating && bot.output.isEmpty
     }
 
-    init(_ bot: Bot, disclaimerHandlers: DisclaimerHandlers) {
+    init(_ bot: Bot, showMetrics: Binding<Bool>, disclaimerHandlers: DisclaimerHandlers) {
         _bot = StateObject(wrappedValue: bot)
+        _showMetrics = showMetrics
         self.disclaimerHandlers = disclaimerHandlers
     }
 
@@ -78,7 +80,11 @@ struct BotView: View {
 
     func respond() {
         isGenerating = true
-        isTextEditorFocused = false
+        #if targetEnvironment(macCatalyst)
+            isTextEditorFocused = true
+        #else
+            isTextEditorFocused = false
+        #endif
         stopSubmitted = false
         let originalInput = input.trimmingCharacters(in: .whitespacesAndNewlines)
         input = "" // Clear the input after sending
@@ -91,6 +97,9 @@ struct BotView: View {
                 bot.setOutput(to: "")
                 isGenerating = false
                 stopSubmitted = false
+                #if targetEnvironment(macCatalyst)
+                    isTextEditorFocused = true  // Mac Only. Re-focus after response
+                #endif
             }
         }
     }
@@ -104,7 +113,9 @@ struct BotView: View {
         Task { @MainActor in
             await bot.clearHistory()
             bot.setOutput(to: "")
-             input = "" // Clear the input
+            input = "" // Clear the input
+            // Reset metrics when clearing chat history
+            bot.metrics.reset()
         }
     }
 
@@ -216,71 +227,37 @@ struct BotView: View {
 
     @ViewBuilder
     func shareButton() -> some View {
-        Button(action: {
-            isTextEditorFocused = false
-            // disclaimerHandlers.setActiveDisclaimer(Disclaimers.ShareDisclaimer())
-            // disclaimerHandlers.setCancelAction({ disclaimerHandlers.setShowDisclaimerPage(false) })
-            // disclaimerHandlers.setAllowOutsideTapDismiss(true)
-            // disclaimerHandlers.setConfirmAction({ shareConversation() })
-            // disclaimerHandlers.setShowDisclaimerPage(true)
-            showTextShareSheet = true
-        }) {
-            HStack {
-                if isSharing {
-                    SpinnerView(color: Color("AccentColor"))
-                } else {
-                    Image(systemName: "square.and.arrow.up")
-                }
-            }
-            .foregroundColor(Color("TextColor"))
+        if isSharing {
+            SpinnerView(color: Color("AccentColor"))
+        } else {
+            let isDisabled = isSharing || bot.history.isEmpty || isGenerating
+            ToolbarButton(action: {
+                isTextEditorFocused = false
+                // disclaimerHandlers.setActiveDisclaimer(Disclaimers.ShareDisclaimer())
+                // disclaimerHandlers.setCancelAction({ disclaimerHandlers.setShowDisclaimerPage(false) })
+                // disclaimerHandlers.setAllowOutsideTapDismiss(true)
+                // disclaimerHandlers.setConfirmAction({ shareConversation() })
+                // disclaimerHandlers.setShowDisclaimerPage(true)
+                showTextShareSheet = true
+            }, assetName: "ShareIcon", foregroundColor: Color("AccentColor"))
+             .disabled(isDisabled)
         }
-        .disabled(isSharing || bot.history.isEmpty || isGenerating)
-        .opacity(isSharing || bot.history.isEmpty || isGenerating ? 0.5 : 1)
     }
 
     @ViewBuilder
-    func trashButton() -> some View {
-        Button(action: {
+    func newChatButton() -> some View {
+        ToolbarButton(action: {
             isTextEditorFocused = false
             isDeleteHistoryConfirmationVisible = true
             stop()
-        }) {
-            Image(systemName: "trash.fill")
-                .foregroundColor(Color("TextColor"))
-        }.alert("Delete history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
-            Button("Delete", action: deleteHistory)
-            Button("Cancel", role: .cancel) {
-                isDeleteHistoryConfirmationVisible = false
-            }
-        })
-        .disabled(isDeleteButtonDisabled)
-        .opacity(isDeleteButtonDisabled ? 0.5 : 1)
-    }
-
-    @ViewBuilder
-    func scrollToBottomButton() -> some View {
-        VStack {
-            Spacer()
-
-            Button(action: {
-                scrollToBottom = true
-            }) {
-                Image(systemName: "arrow.down")
-                    .aspectRatio(contentMode: .fit)
-                    .padding(10)
-                    .foregroundColor(Color("BackgroundColor"))
-                    .background(Color("LightGreen"))
-                    .clipShape(Circle())
-            }
-            .opacity(shouldShowScrollButton() ? 1 : 0)
-            .transition(.opacity)
-            .animation(
-                shouldShowScrollButton()
-                ? .easeIn(duration: 0.1)
-                : .easeOut(duration: 0.3).delay(0.1),
-                value: shouldShowScrollButton())
-        }
-        .padding([.bottom], 4)
+        }, assetName: "NewChatIcon", foregroundColor: Color("LightGreen"))
+            .alert("Clear chat history?", isPresented: $isDeleteHistoryConfirmationVisible, actions: {
+                Button("Clear", action: deleteHistory)
+                Button("Cancel", role: .cancel) {
+                    isDeleteHistoryConfirmationVisible = false
+                }
+            })
+            .disabled(isDeleteButtonDisabled)
     }
 
     var body: some View {
@@ -301,6 +278,8 @@ struct BotView: View {
                             ChatView(
                                 history: bot.history,
                                 output: bot.output.trimmingCharacters(in: .whitespacesAndNewlines),
+                                metrics: bot.metrics,
+                                showMetrics: $showMetrics,
                                 isGenerating: $isGenerating,
                                 isScrolledToBottom: $isScrolledToBottom,
                                 stopSubmitted: $stopSubmitted
@@ -317,7 +296,10 @@ struct BotView: View {
                                     isTextEditorFocused = false
                                 }))
 
-                            scrollToBottomButton()
+                            ScrollToBottomButtonView(
+                                scrollToBottom: $scrollToBottom,
+                                shouldShowScrollButton: shouldShowScrollButton
+                            )
                         }
                     }
                 } else {
@@ -337,7 +319,12 @@ struct BotView: View {
                 Spacer()
 
                 if (isChatEmpty) {
-                    BotChatBubble(text: String(localized: "Welcome chat message", comment: "Default chat bubble when conversation is empty"), maxWidth: geometry.size.width)
+                    BotChatBubble(
+                        text: String(localized: "Welcome chat message", comment: "Default chat bubble when conversation is empty"),
+                        maxWidth: geometry.size.width,
+                        hideCopyButton: true
+                    )
+                    .padding(.bottom, 15)
                 }
 
                 MessageInputView(
@@ -367,8 +354,15 @@ struct BotView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                shareButton()
-                trashButton()
+                #if targetEnvironment(macCatalyst)
+                    let spacing: CGFloat = 20
+                #else
+                    let spacing: CGFloat = 32
+                #endif
+                HStack(alignment: .bottom, spacing: spacing) {
+                    shareButton()
+                    newChatButton()
+                }
             }
         }
     }
@@ -414,6 +408,9 @@ struct ContentView: View {
     /// A flag indicating whether to use mocked model responses.
     @State private var useMockedModelResponse: Bool = false
 
+    /// A flag indicating whether to show metrics.
+    @State private var showMetrics: Bool = false
+
     /// Logger for tracking events in the ContentView.
     let logger = Logger(subsystem: "com.allenai.olmoe", category: "ContentView")
 
@@ -429,8 +426,10 @@ struct ContentView: View {
                                 useMockedModelResponse = true
                             }
                         )
-                    } else if let bot = bot {
-                        BotView(bot, disclaimerHandlers: DisclaimerHandlers(
+                    } else if downloadManager.isModelReady, let bot = bot {
+                        BotView(bot,
+                               showMetrics: $showMetrics,
+                               disclaimerHandlers: DisclaimerHandlers(
                             setActiveDisclaimer: { self.disclaimerState.activeDisclaimer = $0 },
                             setAllowOutsideTapDismiss: { self.disclaimerState.allowOutsideTapDismiss = $0 },
                             setCancelAction: { self.disclaimerState.onCancel = $0 },
@@ -446,11 +445,23 @@ struct ContentView: View {
                         initializeBot()
                     }
                 }
+                .onAppear {
+                    checkModelAndInitializeBot()
+                }
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     AppToolbar(
                         leadingContent: {
-                            InfoButton(action: { showInfoPage = true })
+                            HStack(alignment: .bottom, spacing: 20) {
+                                // Info button
+                                InfoButton(action: { showInfoPage = true })
+
+                                // Metrics toggle button - now using the MetricsButton component
+                                MetricsButton(
+                                    action: { showMetrics.toggle() },
+                                    isShowing: showMetrics
+                                )
+                            }
                         }
                     )
                 }
@@ -466,8 +477,6 @@ struct ContentView: View {
             .sheet(isPresented: $disclaimerState.showDisclaimerPage) {
                 SheetWrapper {
                     DisclaimerPage(
-                        allowOutsideTapDismiss: disclaimerState.allowOutsideTapDismiss,
-                        isPresented: $disclaimerState.showDisclaimerPage,
                         message: disclaimerState.activeDisclaimer?.text ?? "",
                         title: disclaimerState.activeDisclaimer?.title ?? "",
                         titleText: disclaimerState.activeDisclaimer?.headerTextContent ?? [],
@@ -493,17 +502,23 @@ struct ContentView: View {
         }
     }
 
-    /// Checks if the model is ready and initializes the bot if it is.
+    /// Checks if the model exists before initializing the bot
     private func checkModelAndInitializeBot() {
         if FileManager.default.fileExists(atPath: Bot.modelFileURL.path) {
             downloadManager.isModelReady = true
             initializeBot()
+        } else {
+            downloadManager.isModelReady = false
         }
     }
 
     /// Initializes the bot instance and sets the loopback test response flag.
     private func initializeBot() {
-        bot = Bot()
-        bot?.loopBackTestResponse = useMockedModelResponse
+        do {
+            bot = try Bot()
+            bot?.loopBackTestResponse = useMockedModelResponse
+        } catch {
+            print("Error initializing bot: \(error)")
+        }
     }
 }

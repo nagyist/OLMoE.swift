@@ -17,74 +17,13 @@ public struct UserChatBubble: View {
         HStack(alignment: .top) {
             Spacer()
             Text(text.trimmingCharacters(in: .whitespacesAndNewlines))
-                .padding(12)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 20)
                 .background(Color("Surface"))
-                .cornerRadius(12)
+                .cornerRadius(24)
                 .frame(maxWidth: maxWidth * 0.75, alignment: .trailing)
                 .font(.body())
-        }
-    }
-}
-
-public struct BotChatBubble: View {
-    var text: String
-    var maxWidth: CGFloat
-    var isGenerating: Bool = false
-
-    public var body: some View {
-        HStack(alignment: .top, spacing: 6) {
-            Image("BotProfilePicture")
-                .resizable()
-                .frame(width: 20, height: 20)
-                .padding(4)
-                .background(Color("Surface"))
-                .clipShape(Circle())
-                .padding(.trailing, 12)
-
-            if isGenerating && text.isEmpty {
-                TypingIndicator()
-            } else {
-                Markdown(text)
-                    .padding(.top, -2)
-                    .background(Color("BackgroundColor"))
-                    .frame(maxWidth: maxWidth * 0.75, alignment: .leading)
-                    .font(.body())
-                    .markdownTextStyle(\.code) {
-                        FontFamilyVariant(.monospaced)
-                        FontSize(.em(0.85))
-                        BackgroundColor(Color("Surface").opacity(0.35))
-                    }
-                    .markdownBlockStyle(\.codeBlock) { configuration in
-                        configuration.label
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color("Surface").opacity(0.35))
-                            .markdownTextStyle {
-                                FontFamilyVariant(.monospaced)
-                                FontSize(.em(0.85))
-                            }
-                            .markdownMargin(top: 8, bottom: 8)
-                    }
-            }
-            Spacer()
-        }
-        .padding([.leading], 12)
-    }
-}
-
-public struct TypingIndicator: View {
-    @State private var dotCount = 0
-
-    public var body: some View {
-        HStack() {
-            Text(String(repeating: ".", count: dotCount))
-        }
-        .onAppear {
-            // Animate dots
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.dotCount = (self.dotCount + 1) % 4 // Cycle through 0-3 dots
-            }
+                .textSelection(.enabled)
         }
     }
 }
@@ -127,6 +66,12 @@ public struct ChatView: View {
     /// The output text from the bot.
     public var output: String
 
+    /// Metrics for displaying inference performance and token counts
+    public var metrics: InferenceMetrics
+
+    /// Controls whether to show the metrics view
+    @Binding var showMetrics: Bool
+
     /// A binding that indicates whether the bot is currently generating a response.
     @Binding var isGenerating: Bool
 
@@ -151,27 +96,42 @@ public struct ChatView: View {
     /// An observable object that tracks keyboard height changes.
     @StateObject private var keyboardResponder = KeyboardResponder()
 
+    /// Add this state variable at the top with other @State vars
+    @State private var lastUserMessageId: UUID?
+
     public var body: some View {
         GeometryReader { geometry in
-            ScrollViewReader { proxy in
-                ScrollView {
-                    chatContent(proxy, parentWidth: geometry.size.width)
+            VStack(spacing: 0) {
+                // Conditionally show metrics view based on showMetrics binding
+                if showMetrics {
+                    MetricsView(metrics: metrics)
                 }
-                .background(scrollHeightTracker())
-                .coordinateSpace(name: ScrollState.ScrollSpaceName)
-                .onChange(of: history) { _, newHistory in
-                    handleHistoryChange(newHistory, proxy)
+
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        chatContent(proxy, parentWidth: geometry.size.width)
+                    }
+                    .background(scrollHeightTracker())
+                    .coordinateSpace(name: ScrollState.ScrollSpaceName)
+                    .onChange(of: history) { _, newHistory in
+                        handleHistoryChange(newHistory, proxy)
+                    }
+                    .onChange(of: stopSubmitted) { _, _ in
+                        self.newHeight = scrollState.contentHeight
+                    }
+                    .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
+                        handleKeyboardChange(newHeight, proxy)
+                    }
+                    #if targetEnvironment(macCatalyst)
+                        .onChange(of: geometry.size.height) { _, newHeight in
+                            self.outerHeight = newHeight
+                        }
+                    #endif
+                    .preferredColorScheme(.dark)
                 }
-                .onChange(of: stopSubmitted) { _, _ in
-                    self.newHeight = scrollState.contentHeight
+                .onAppear {
+                    self.outerHeight = geometry.size.height
                 }
-                .onChange(of: keyboardResponder.keyboardHeight) { _, newHeight in
-                    handleKeyboardChange(newHeight, proxy)
-                }
-                .preferredColorScheme(.dark)
-            }
-            .onAppear {
-                self.outerHeight = geometry.size.height
             }
         }
     }
@@ -283,8 +243,15 @@ public struct ChatView: View {
     private func handleHistoryChange(_ newHistory: [Chat], _ proxy: ScrollViewProxy) {
         if let lastMessage = getLatestUserChat() {
             let newMessagesCount = getUserChats(history: newHistory).count
-            if newMessagesCount > 1 {
+            let isNewUserMessage = lastMessage.id != lastUserMessageId
+
+            if newMessagesCount > 1 && isNewUserMessage {
                 // Set new height based on current content plus outer height
+                #if targetEnvironment(macCatalyst)
+                    // This assignment would happen in handleKeyboardChange but there is no on-screen keyboard on Mac
+                    self.contentHeight = scrollState.contentHeight
+                #endif
+
                 self.newHeight = self.contentHeight + self.outerHeight
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -293,6 +260,7 @@ public struct ChatView: View {
                     }
                 }
             }
+            lastUserMessageId = lastMessage.id
         }
     }
 
@@ -364,48 +332,14 @@ public struct ChatView: View {
         ## Links and References
         [External Link](https://example.com)
         <https://auto-link.com>
-
-        Reference-style [link][ref] and footnotes[^1]
-
-        [^1]: This is a footnote
-        [ref]: https://example.com
         """),
-
-        Chat(role: .user, content: "Any special features?"),
-        Chat(role: .bot, content: """
-        ## Special Elements
-        <details>
-        <summary>Expandable Section</summary>
-
-        * Hidden content
-        * More items
-        </details>
-
-        ## Math and Diagrams
-        Math: $E = mc^2$
-
-        ```mermaid
-        graph TD;
-            A-->B;
-            B-->C;
-            C-->D;
-        ```
-
-        ## Definition Lists
-        Term 1
-        : First definition
-        : Another definition
-
-        Term 2
-        : With nested list
-          * Item 1
-          * Item 2
-        """)
     ]
 
     ChatView(
         history: exampleHistory,
         output: "",
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(true),
         isGenerating: .constant(false),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)
@@ -425,6 +359,8 @@ public struct ChatView: View {
     ChatView(
         history: exampleHistory,
         output: exampleOutput,
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(true),
         isGenerating: .constant(true),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)
@@ -444,6 +380,8 @@ public struct ChatView: View {
     ChatView(
         history: exampleHistory,
         output: exampleOutput,
+        metrics: InferenceMetrics(),
+        showMetrics: .constant(false),
         isGenerating: .constant(true),
         isScrolledToBottom: .constant(true),
         stopSubmitted: .constant(false)

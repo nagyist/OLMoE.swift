@@ -11,7 +11,7 @@ enum InfoText {
         HeaderTextPair(
             header: "What is the OLMoE App?",
             text: """
-                This application allows you to interact with Ai2’s OLMoE model, a Mixture-of-Experts language model that can run completely on-device.
+                This application allows you to interact with Ai2's OLMoE model, a Mixture-of-Experts language model that can run completely on-device.
                 """),
         HeaderTextPair(
             header: "What type of data is used to train the models?",
@@ -35,7 +35,7 @@ enum InfoText {
             header:
                 "What data does Ai2 collect about me?",
             text: """
-                The only time this app collects data is when you choose to share a conversation. Once you share a conversation, we use this interaction data to identify areas for improvement and to develop new features that advance the scientific and educational purposes of Ai2, as described in our general [Terms of Use](https://allenai.org/terms/2024-09-25) and [Privacy Policy](https://allenai.org/privacy-policy).
+                OLMoE runs locally on your device and your interactions with the app will not be shared with Ai2. Ai2 will receive anonymized app development data though Apple's crash analytics APIs in accordance with our [Privacy Policy](https://allenai.org/privacy-policy).
                 """),
 
         HeaderTextPair(
@@ -64,6 +64,12 @@ enum InfoText {
                 Licensed under the MIT License.
                 You may obtain a copy of the license at:
                 [MarkdownUI Repository](https://github.com/gonzalezreal/swift-markdown-ui)
+
+                HighlightSwift
+                Copyright (c) Stefan Blos
+                Licensed under the MIT License.
+                You may obtain a copy of the license at:
+                [HighlightSwift Repository](https://github.com/appstefan/HighlightSwift)
                 """)
     ]
 }

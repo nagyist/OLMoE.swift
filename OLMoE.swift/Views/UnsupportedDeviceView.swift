@@ -15,7 +15,7 @@ struct UnsupportedDeviceView: View {
     let proceedAnyway: () -> Void
     let proceedMocked: () -> Void
 
-    @State private var mockedModelButtonWidth: CGFloat = 100
+    @State private var minButtonWidth: CGFloat = 100
     @State private var notSupportedWidth: CGFloat = 100
 
     var body: some View {
@@ -24,25 +24,31 @@ struct UnsupportedDeviceView: View {
 
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 20) {
+                VStack(spacing: 30) {
                     Image("Exclamation")
                         .foregroundColor(Color("AccentColor"))
+                        .frame(width: 44, height: 40)
 
-                    Text("On-Device OLMoE Not Available")
+                    Text("Device not supported")
                         .id(UUID())
-                        .font(.title())
-                        .foregroundColor(Color("AccentColor"))
+                        .font(.title(.medium))
                         .background(GeometryReader { geometry in
                             Color.clear.onAppear {
                                 notSupportedWidth = geometry.size.width + 24
                             }
                         })
                         .multilineTextAlignment(.center)
-
-                    Text("This device does not have the 8GB physical RAM required to run OLMoE locally.")
-                        .multilineTextAlignment(.center)
-                        .font(.body())
-
+                    
+                    VStack() {
+                        Text("This app needs 8GB of RAM.")
+                            .multilineTextAlignment(.center)
+                            .font(.body(.bold))
+                        if availableMemoryInGB > 0 {
+                            Text("This device has \(formattedMemory)GB available.")
+                                .multilineTextAlignment(.center)
+                                .font(.body())
+                        }
+                    }
                     Text("OLMoE can run locally on iPhone 15 Pro/Max, iPhone 16 models, iPad Pro 4th Gen and newer, or iPad Air 5th Gen and newer.")
                         .multilineTextAlignment(.center)
                         .font(.body())
@@ -54,7 +60,12 @@ struct UnsupportedDeviceView: View {
                     Button("Try OLMoE at the Ai2 Playground") {
                         showWebView = true
                     }
-                    .buttonStyle(PrimaryButton(minWidth: mockedModelButtonWidth))
+                    .buttonStyle(.PrimaryButton)
+                    .background(GeometryReader { geometry in
+                        Color.clear.onAppear {
+                            minButtonWidth = geometry.size.width - 24
+                        }
+                    })
                     .padding(.top, 12)
                     .sheet(isPresented: $showWebView, onDismiss: nil) {
                         SheetWrapper {
@@ -67,18 +78,10 @@ struct UnsupportedDeviceView: View {
                     }
 
                     if FeatureFlags.allowDeviceBypass {
-                        if availableMemoryInGB > 0 {
-                            Text("(The model requires ~6 GB and this device has: \(formattedMemory) GB available.)")
-                                .frame(width: notSupportedWidth)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .font(.body())
-                        }
-
                         Button("Proceed Anyway") {
                             proceedAnyway()
                         }
-                        .buttonStyle(PrimaryButton(minWidth: mockedModelButtonWidth))
+                        .buttonStyle(PrimaryButton(minWidth: minButtonWidth))
                         .padding(.vertical, 5)
                     }
 
@@ -87,13 +90,8 @@ struct UnsupportedDeviceView: View {
                             proceedMocked()
                         }
                         .id(UUID())
-                        .buttonStyle(.PrimaryButton)
+                        .buttonStyle(PrimaryButton(minWidth: minButtonWidth))
                         .padding(.vertical, 5)
-                        .background(GeometryReader { geometry in
-                            Color.clear.onAppear {
-                                mockedModelButtonWidth = geometry.size.width - 24
-                            }
-                        })
                     }
 
                 }

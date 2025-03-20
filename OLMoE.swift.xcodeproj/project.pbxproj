@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48779B152D80A17200C446E8 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 48779B142D80A17200C446E8 /* HighlightSwift */; };
+		4885754D2D77756600F7A36F /* InferenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4885754C2D77756300F7A36F /* InferenceMetrics.swift */; };
 		48952DF02D4D69D400476373 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 48952DEF2D4D69D400476373 /* MarkdownUI */; };
 		489710A22D14D22600F0DB43 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 489710A12D14D22600F0DB43 /* README.md */; };
 		489FD75C2CF13E4E0011E908 /* AttestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489FD75B2CF13E4E0011E908 /* AttestManager.swift */; };
@@ -31,6 +33,8 @@
 
 /* Begin PBXFileReference section */
 		48194C372D14D7C500E76532 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		4877E8992D7A4DB200C446E8 /* OLMoE_swift_macCatalyst.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OLMoE_swift_macCatalyst.entitlements; sourceTree = "<group>"; };
+		4885754C2D77756300F7A36F /* InferenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InferenceMetrics.swift; sourceTree = "<group>"; };
 		489710A12D14D22600F0DB43 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		489FD75B2CF13E4E0011E908 /* AttestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttestManager.swift; sourceTree = "<group>"; };
 		48B806342CF54D9600E1CC0A /* LambdaResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LambdaResponseModel.swift; sourceTree = "<group>"; };
@@ -70,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48779B152D80A17200C446E8 /* HighlightSwift in Frameworks */,
 				A0117FFF2C990F5600035007 /* llama in Frameworks */,
 				48952DF02D4D69D400476373 /* MarkdownUI in Frameworks */,
 			);
@@ -115,6 +120,7 @@
 				A0117FEB2C990EAB00035007 /* OLMoE_swiftApp.swift */,
 				A0117FEF2C990EAC00035007 /* Assets.xcassets */,
 				A0117FF12C990EAC00035007 /* OLMoE_swift.entitlements */,
+				4877E8992D7A4DB200C446E8 /* OLMoE_swift_macCatalyst.entitlements */,
 				A0117FF22C990EAC00035007 /* Preview Content */,
 			);
 			path = OLMoE.swift;
@@ -131,6 +137,7 @@
 		B26FDB402CEAD47700E1D57C /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4885754C2D77756300F7A36F /* InferenceMetrics.swift */,
 				48E37C1F2D02715B0030C57C /* KeyboardResponder.swift */,
 				48B806342CF54D9600E1CC0A /* LambdaResponseModel.swift */,
 				489FD75B2CF13E4E0011E908 /* AttestManager.swift */,
@@ -173,6 +180,7 @@
 			packageProductDependencies = (
 				A0117FFE2C990F5600035007 /* llama */,
 				48952DEF2D4D69D400476373 /* MarkdownUI */,
+				48779B142D80A17200C446E8 /* HighlightSwift */,
 			);
 			productName = OLMoE.swift;
 			productReference = A0117FE82C990EAB00035007 /* OLMoE.swift.app */;
@@ -208,6 +216,7 @@
 			packageReferences = (
 				A0117FFD2C990F5600035007 /* XCRemoteSwiftPackageReference "llama" */,
 				48952DEE2D4D69D400476373 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				48779B132D80A17200C446E8 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
 			);
 			productRefGroup = A0117FE92C990EAB00035007 /* Products */;
 			projectDirPath = "";
@@ -244,6 +253,7 @@
 				A046603D2CA3FAFA007BD14C /* Configuration.swift in Sources */,
 				A01180012C990F7600035007 /* LLM.swift in Sources */,
 				B26FDB5E2CEAD5CB00E1D57C /* Model.swift in Sources */,
+				4885754D2D77756600F7A36F /* InferenceMetrics.swift in Sources */,
 				A0117FEC2C990EAB00035007 /* OLMoE_swiftApp.swift in Sources */,
 				B26FDB502CEAD54400E1D57C /* Template.swift in Sources */,
 				B26FDB4E2CEAD53E00E1D57C /* Quantization.swift in Sources */,
@@ -386,6 +396,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OLMoE.swift/OLMoE_swift.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = OLMoE.swift/OLMoE_swift.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = OLMoE.swift/OLMoE_swift_macCatalyst.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "-";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -405,6 +417,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -419,10 +432,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -434,6 +447,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = OLMoE.swift/OLMoE_swift.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphone*]" = OLMoE.swift/OLMoE_swift.entitlements;
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = OLMoE.swift/OLMoE_swift_macCatalyst.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
@@ -453,6 +468,7 @@
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -467,10 +483,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};
@@ -498,6 +514,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		48779B132D80A17200C446E8 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/appstefan/HighlightSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.9;
+			};
+		};
 		48952DEE2D4D69D400476373 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
@@ -517,6 +541,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		48779B142D80A17200C446E8 /* HighlightSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48779B132D80A17200C446E8 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
+			productName = HighlightSwift;
+		};
 		48952DEF2D4D69D400476373 /* MarkdownUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 48952DEE2D4D69D400476373 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;

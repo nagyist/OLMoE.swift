@@ -35,10 +35,16 @@ class BackgroundDownloadManager: NSObject, ObservableObject, URLSessionDownloadD
 
     private override init() {
         super.init()
+        #if targetEnvironment(macCatalyst)
+        // Use regular session for Mac Catalyst
+        backgroundSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+        #else
+        // Use background session for iOS
         let config = URLSessionConfiguration.background(withIdentifier: "ai.olmo.OLMoE.backgroundDownload")
         config.isDiscretionary = false
         config.sessionSendsLaunchEvents = true
         backgroundSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
+        #endif
 
         startNetworkMonitoring()
     }
@@ -183,24 +189,6 @@ class BackgroundDownloadManager: NSObject, ObservableObject, URLSessionDownloadD
     }
 }
 
-
-struct Ai2Logo: View {
-    var body: some View {
-        HStack {
-            Image("Ai2 Logo")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 18)
-
-            Text("allenai.org")
-                .font(.manrope(size: 14))
-                .foregroundColor(Color("TextColor"))
-        }
-        .padding(.horizontal, 0)
-        .padding(.vertical, 0)
-    }
-}
-
 /// A view that displays the model download progress and status.
 struct ModelDownloadView: View {
     @StateObject private var downloadManager = BackgroundDownloadManager.shared
@@ -211,7 +199,7 @@ struct ModelDownloadView: View {
             Color("BackgroundColor")
                 .edgesIgnoringSafeArea(.all)
 
-            VStack {
+            VStack(spacing: 40) {
                 if downloadManager.isModelReady {
                     Text("Model is ready to use!")
                         .foregroundColor(Color("TextColor"))
@@ -239,19 +227,17 @@ struct ModelDownloadView: View {
                     }
                 } else {
                     Text("Welcome")
-                        .font(.telegraf(size: 48))
+                        .font(.telegraf(.medium, size: 40))
 
                     Text("Download Model Message")
                         .multilineTextAlignment(.center)
-                        .font(.body())
+                        .font(.body(.regular))
                         .padding([.bottom], 4)
 
-                    Spacer()
-                        .frame(height: 16)
-
-                    Button("Download Model") {
-                        showDownloadConfirmation = true
+                    Button(action: { showDownloadConfirmation = true }) {
+                        Image("DownloadIcon")
                     }
+                    .buttonStyle(.borderless)
                     .buttonStyle(.PrimaryButton)
                     .sheet(isPresented: $showDownloadConfirmation) {
                         SheetWrapper {
@@ -295,24 +281,18 @@ struct ModelDownloadView: View {
             }
             .padding()
 
-            Ai2Logo()
+            Ai2LogoView(applyMacCatalystPadding: true)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         }
         .onAppear {
             if FileManager.default.fileExists(atPath: Bot.modelFileURL.path) {
                 downloadManager.isModelReady = true
+            } else {
+                // Model file doesn't exist, make sure isModelReady is false
+                downloadManager.isModelReady = false
             }
         }
     }
-}
-
-#Preview("Ai2Logo") {
-    VStack {
-        Ai2Logo()
-    }
-    .preferredColorScheme(.dark)
-    .padding()
-    .background(Color("BackgroundColor"))
 }
 
 #Preview("ModelDownloadView") {

@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import MarkdownUI
 
 struct DisclaimerHandlers {
     /// A closure to set the active disclaimer.
@@ -98,12 +99,6 @@ struct DisclaimerPage: View {
     /// A typealias for a button configuration.
     typealias PageButton = (text: String, onTap: () -> Void)
 
-    /// A flag indicating whether outside tap dismiss is allowed.
-    let allowOutsideTapDismiss: Bool
-
-    /// A binding that indicates whether the disclaimer page is presented.
-    @Binding var isPresented: Bool
-
     /// The message content of the disclaimer.
     let message: String
 
@@ -129,9 +124,13 @@ struct DisclaimerPage: View {
                 }
 
                 if !message.isEmpty {
-                    Text(.init(message))
+                    Markdown(message)
                         .font(.body())
                         .multilineTextAlignment(.leading)
+                        .markdownTextStyle(\.link) {
+                            ForegroundColor(Color("AccentColor"))
+                            UnderlineStyle(.single)
+                        }
                 }
 
                 VStack(alignment: .leading, spacing: 20) {
@@ -154,7 +153,7 @@ struct DisclaimerPage: View {
                     .buttonStyle(.PrimaryButton)
                 }
             }
-            .padding([.horizontal], 12)
+            .padding([.horizontal], 24)
             .padding([.vertical], 24)
         }
     }
@@ -162,8 +161,6 @@ struct DisclaimerPage: View {
 
 #Preview("DisclaimerPage") {
     DisclaimerPage(
-        allowOutsideTapDismiss: false,
-        isPresented: .constant(true),
         message: "Message",
         title: "Title",
         titleText: [HeaderTextPair](),

@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import MarkdownUI
 
 struct HeaderTextPair: Identifiable {
     let id = UUID()
@@ -26,9 +27,13 @@ struct HeaderTextPairView : View {
                     .multilineTextAlignment(.leading)
             }
 
-            Text(.init(text))
+            Markdown(text)
                 .font(.body())
                 .multilineTextAlignment(.leading)
+                .markdownTextStyle(\.link) {
+                    ForegroundColor(Color("AccentColor"))
+                    UnderlineStyle(.single)
+                }
         }
     }
 }
